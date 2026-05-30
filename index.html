@@ -24,7 +24,6 @@
   }
   [data-theme="light"] {
     --bg: #f5f5f0;
-    --bg2: #ebebе5;
     --bg2: #e8e8e0;
     --bg3: #ddddd5;
     --border: rgba(0,0,0,0.1);
@@ -39,7 +38,6 @@
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
   h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
 
-  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
@@ -48,15 +46,22 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 40px;
-    background: rgba(10,10,15,0.85);
+    padding: 14px 40px;
+    background: rgba(10,10,15,0.92);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     transition: background 0.3s;
   }
-  [data-theme="light"] nav { background: rgba(245,245,240,0.85); }
-  .nav-logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-  .nav-logo span { color: var(--accent); }
+  [data-theme="light"] nav { background: rgba(245,245,240,0.92); }
+  .nav-logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-icon {
+    width: 36px; height: 36px; background: var(--accent); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: #000;
+    letter-spacing: -1px;
+  }
+  .nav-logo-text { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.1; }
+  .nav-logo-text small { display: block; font-size: 9px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); margin-top: 1px; }
   .nav-links { display: flex; gap: 32px; list-style: none; }
   .nav-links a { color: var(--text2); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
   .nav-links a:hover { color: var(--text); }
@@ -174,8 +179,12 @@
   .contact-info h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
   .contact-info p { color: var(--text2); line-height: 1.6; margin-bottom: 32px; }
   .contact-items { display: flex; flex-direction: column; gap: 16px; }
-  .contact-item { display: flex; align-items: center; gap: 12px; }
-  .contact-icon { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .contact-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; transition: opacity 0.2s; }
+  .contact-item:hover { opacity: 0.8; }
+  .contact-icon { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .contact-icon.tg { background: rgba(0,136,204,0.15); border-color: rgba(0,136,204,0.3); }
+  .contact-icon.ig { background: rgba(225,48,108,0.15); border-color: rgba(225,48,108,0.3); }
+  .contact-icon.ph { background: rgba(46,213,115,0.15); border-color: rgba(46,213,115,0.3); }
   .contact-item span { font-size: 14px; color: var(--text2); }
   .contact-form { display: flex; flex-direction: column; gap: 16px; }
   .form-group input, .form-group textarea, .form-group select {
@@ -185,11 +194,16 @@
   }
   .form-group input:focus, .form-group textarea:focus { border-color: var(--accent2); }
   .form-group textarea { resize: vertical; min-height: 100px; }
+  .contact-send-status { display: none; padding: 10px 14px; border-radius: 8px; font-size: 13px; }
+  .contact-send-status.show { display: block; background: rgba(46,213,115,0.1); border: 1px solid rgba(46,213,115,0.3); color: #2ed573; }
 
   /* FOOTER */
   footer { background: var(--bg); border-top: 1px solid var(--border); padding: 40px; text-align: center; }
   footer p { color: var(--text2); font-size: 14px; }
   footer strong { color: var(--accent); }
+  .footer-socials { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+  .footer-social-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; transition: all 0.2s; }
+  .footer-social-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   /* ========== MODAL / AUTH ========== */
   .overlay {
@@ -200,7 +214,7 @@
   .overlay.open { display: flex; }
   .modal {
     background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
-    padding: 40px; width: 100%; max-width: 440px; position: relative;
+    padding: 40px; width: 100%; max-width: 480px; position: relative;
     animation: fadeUp 0.3s ease both;
   }
   .modal-close { position: absolute; top: 16px; right: 16px; background: var(--card); border: 1px solid var(--border); color: var(--text); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; }
@@ -228,9 +242,17 @@
   .login-type-btn span { font-size: 12px; font-weight: 500; }
   .btn-full { width: 100%; background: var(--accent2); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Syne', sans-serif; margin-top: 8px; }
   .btn-full:hover { opacity: 0.85; }
+  .btn-tg { background: #0088cc; margin-top: 8px; }
   .alert { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
   .alert-error { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: #ff6b7a; }
   .alert-success { background: rgba(46,213,115,0.1); border: 1px solid rgba(46,213,115,0.3); color: #2ed573; }
+  .alert-info { background: rgba(0,136,204,0.1); border: 1px solid rgba(0,136,204,0.3); color: #64c8ff; }
+
+  /* Telegram redirect screen */
+  .tg-redirect-box { text-align: center; padding: 10px 0; }
+  .tg-redirect-box .tg-big-icon { font-size: 56px; margin-bottom: 12px; }
+  .tg-redirect-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .tg-redirect-box p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
 
   /* ========== DASHBOARD ========== */
   .dashboard {
@@ -244,7 +266,8 @@
     display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
     z-index: 100; overflow-y: auto;
   }
-  .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; padding: 8px 12px; margin-bottom: 24px; }
+  .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; padding: 8px 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .sidebar-logo-icon { width: 30px; height: 30px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: #000; }
   .sidebar-logo span { color: var(--accent); }
   .sidebar-user { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 24px; }
   .sidebar-user .avatar { width: 40px; height: 40px; border-radius: 10px; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 8px; }
@@ -270,7 +293,6 @@
   .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
   .page-sub { font-size: 14px; color: var(--text2); margin-top: 4px; }
 
-  /* DASHBOARD PANELS */
   .panel { display: none; }
   .panel.active { display: block; }
 
@@ -342,7 +364,6 @@
   .approval-badge.pending { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; }
   .approval-badge.approved { background: rgba(46,213,115,0.1); border: 1px solid rgba(46,213,115,0.3); color: #2ed573; }
 
-  /* GROWTH CHART */
   .chart-area { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
   .chart-area h3 { font-size: 15px; font-weight: 700; margin-bottom: 20px; }
   .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; }
@@ -350,10 +371,8 @@
   .bar { width: 100%; background: linear-gradient(to top, var(--accent2), var(--accent)); border-radius: 6px 6px 0 0; transition: height 0.5s ease; min-height: 4px; }
   .bar-label { font-size: 11px; color: var(--text2); }
 
-  /* NOTIFICATION DOT */
   .notif-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; display: inline-block; margin-left: 6px; }
 
-  /* ADMIN SPECIFIC */
   .role-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
   .role-admin { background: rgba(255,71,87,0.15); color: #ff6b7a; }
   .role-pm { background: rgba(124,58,237,0.15); color: #a78bfa; }
@@ -363,14 +382,22 @@
   .role-sales { background: rgba(232,255,71,0.2); color: #c8e800; }
   .role-accountant { background: rgba(255,255,255,0.1); color: var(--text2); }
   .role-copywriter { background: rgba(255,150,50,0.15); color: #ff9632; }
-  .role-client { background: rgba(100,200,255,0.15); color: #64c8ff; }
+  .role-montajor { background: rgba(255,100,100,0.15); color: #ff7070; }
 
   .action-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; margin-right: 4px; }
   .action-btn:hover { border-color: var(--accent2); color: var(--accent); }
   .action-btn.danger:hover { border-color: var(--red); color: var(--red); }
   .action-btn.success { background: rgba(46,213,115,0.1); border-color: rgba(46,213,115,0.3); color: var(--green); }
 
-  /* ANIMATIONS */
+  /* ACTIVITY LOG */
+  .activity-log { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+  .activity-log h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+  .activity-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+  .activity-text { font-size: 13px; line-height: 1.5; }
+  .activity-time { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -380,27 +407,27 @@
     50% { opacity: 0.3; }
   }
 
-  /* RESPONSIVE */
   @media (max-width: 768px) {
     nav { padding: 12px 20px; }
     .nav-links { display: none; }
     section { padding: 60px 20px; }
-    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 20px; }
     .form-row { grid-template-columns: 1fr; }
-    .sidebar { width: 220px; }
-    .main-content { margin-left: 220px; padding: 20px; }
-    .hero h1 { letter-spacing: -2px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ===== PUBLIC SITE ===== -->
-<div id="publicSite">
-
-  <!-- NAV -->
+<!-- ===== MAIN SITE ===== -->
+<div id="mainSite">
   <nav>
-    <div class="nav-logo">Qadam<span>.</span></div>
+    <a class="nav-logo-wrap" href="#">
+      <div class="nav-logo-icon">QA</div>
+      <div class="nav-logo-text">qadamagency<small>Marketing Agency</small></div>
+    </a>
     <ul class="nav-links">
       <li><a href="#services" data-key="nav_services">Xizmatlar</a></li>
       <li><a href="#portfolio" data-key="nav_portfolio">Portfolio</a></li>
@@ -518,18 +545,24 @@
         <h3 data-key="c_head">Loyihangizni muhokama qilaylik</h3>
         <p data-key="c_sub">Biznesingiz uchun eng to'g'ri yechimni topishda yordam beramiz</p>
         <div class="contact-items">
+          <div class="contact-item"><div class="contact-icon ph">📞</div><span>+998 93 237 88 80</span></div>
+          <a class="contact-item" href="https://t.me/nmv_uz" target="_blank" rel="noopener">
+            <div class="contact-icon tg">✈️</div><span>@nmv_uz — Telegram</span>
+          </a>
+          <a class="contact-item" href="https://www.instagram.com/qadamagency?igsh=MTJ2Zm1jNW5hZ3kwdw==" target="_blank" rel="noopener">
+            <div class="contact-icon ig">📸</div><span>@qadamagency — Instagram</span>
+          </a>
           <div class="contact-item"><div class="contact-icon">📍</div><span>Toshkent, Yunusobod tumani</span></div>
-          <div class="contact-item"><div class="contact-icon">📞</div><span>+998 90 123 45 67</span></div>
-          <div class="contact-item"><div class="contact-icon">✉️</div><span>info@qadam.agency</span></div>
           <div class="contact-item"><div class="contact-icon">🕐</div><span data-key="c_hours">Dushanba–Juma: 9:00–18:00</span></div>
         </div>
       </div>
       <div class="contact-form">
-        <div class="form-group"><input type="text" placeholder="Ismingiz" data-key-ph="ph_name"></div>
-        <div class="form-group"><input type="tel" placeholder="Telefon raqamingiz" data-key-ph="ph_phone"></div>
-        <div class="form-group"><input type="text" placeholder="Kompaniya nomi" data-key-ph="ph_company"></div>
+        <div id="contactStatus" class="contact-send-status"></div>
+        <div class="form-group"><input type="text" id="cf_name" placeholder="Ismingiz" data-key-ph="ph_name"></div>
+        <div class="form-group"><input type="tel" id="cf_phone" placeholder="Telefon raqamingiz" data-key-ph="ph_phone"></div>
+        <div class="form-group"><input type="text" id="cf_company" placeholder="Kompaniya nomi" data-key-ph="ph_company"></div>
         <div class="form-group">
-          <select>
+          <select id="cf_service">
             <option data-key="sel_s">Xizmat tanlang</option>
             <option data-key="sel_1">SMM & Kontent</option>
             <option data-key="sel_2">Video Ishlab Chiqarish</option>
@@ -537,14 +570,19 @@
             <option data-key="sel_4">Targetli Reklama</option>
           </select>
         </div>
-        <div class="form-group"><textarea placeholder="Xabaringiz..." data-key-ph="ph_msg"></textarea></div>
-        <button class="btn-primary" style="width:100%" onclick="alert(T.sent)" data-key="btn_send">Yuborish</button>
+        <div class="form-group"><textarea id="cf_msg" placeholder="Xabaringiz..." data-key-ph="ph_msg"></textarea></div>
+        <button class="btn-primary" style="width:100%" onclick="sendContactMessage()" data-key="btn_send">📤 Xabar yuborish</button>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
+    <div class="footer-socials">
+      <a href="https://t.me/nmv_uz" target="_blank" class="footer-social-btn">✈️ Telegram</a>
+      <a href="https://www.instagram.com/qadamagency?igsh=MTJ2Zm1jNW5hZ3kwdw==" target="_blank" class="footer-social-btn">📸 Instagram</a>
+      <a href="tel:+998932378880" class="footer-social-btn">📞 +998 93 237 88 80</a>
+    </div>
     <p>© 2025 <strong>Qadam Agency</strong>. <span data-key="footer">Barcha huquqlar himoyalangan.</span></p>
   </footer>
 </div>
@@ -576,37 +614,27 @@
       <div id="authAlert" class="alert alert-error" style="display:none"></div>
       <div class="input-group">
         <label data-key="lbl_id">ID raqam</label>
-        <input type="text" id="loginId" placeholder="QD-001">
+        <input type="text" id="loginId" placeholder="admin">
       </div>
       <div class="input-group">
         <label data-key="lbl_pass">Parol</label>
-        <input type="password" id="loginPass" placeholder="••••••••">
+        <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
       </div>
       <button class="btn-full" onclick="doLogin()" data-key="btn_enter">Kirish</button>
-      <p style="font-size:12px;color:var(--text2);margin-top:12px;text-align:center" data-key="demo_hint">Demo: admin/admin123 · pm/pm123 · client/client123</p>
+      <p style="font-size:11px;color:var(--text2);margin-top:12px;text-align:center">Demo: admin/admin123 · pm/pm123 · mob/mob123 · mont/mont123 · client/client123</p>
     </div>
 
-    <!-- REGISTER -->
+    <!-- REGISTER — Telegram botga yo'naltirish -->
     <div id="registerPanel" style="display:none">
-      <div id="regAlert" class="alert alert-error" style="display:none"></div>
-      <div class="input-group">
-        <label data-key="lbl_name">To'liq ism</label>
-        <input type="text" id="regName" placeholder="Ism Familiya">
+      <div class="tg-redirect-box">
+        <div class="tg-big-icon">✈️</div>
+        <h3>Telegram Bot orqali ro'yxatdan o'ting</h3>
+        <p>Ro'yxatdan o'tish uchun bizning Telegram botimizga o'ting. Bot sizni yo'naltiradi va ma'lumotlaringizni to'ldirgach, admin sizga <strong>ID va parol</strong> yuboradi.</p>
+        <button class="btn-full btn-tg" onclick="window.open('https://t.me/nmv_uz','_blank')">
+          ✈️ Telegram botga o'tish
+        </button>
+        <p style="font-size:11px;color:var(--text2);margin-top:12px">Bot orqali ariza topshirgandan so'ng admin siz bilan bog'lanadi</p>
       </div>
-      <div class="input-group">
-        <label data-key="lbl_company">Kompaniya nomi</label>
-        <input type="text" id="regCompany" placeholder="Kompaniya LLC">
-      </div>
-      <div class="input-group">
-        <label data-key="lbl_phone2">Telefon</label>
-        <input type="tel" id="regPhone" placeholder="+998 90 000 00 00">
-      </div>
-      <div class="input-group">
-        <label data-key="lbl_pass2">Parol</label>
-        <input type="password" id="regPass" placeholder="Parol yarating">
-      </div>
-      <button class="btn-full" onclick="doRegister()" data-key="btn_register">Ro'yxatdan o'tish</button>
-      <p style="font-size:12px;color:var(--text2);margin-top:12px;text-align:center" data-key="reg_note">So'rovingiz ko'rib chiqilgach ID va parol yuboriladi</p>
     </div>
   </div>
 </div>
@@ -616,7 +644,10 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-logo">Qadam<span>.</span></div>
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">QA</div>
+      Qadam<span>.</span>
+    </div>
     <div class="sidebar-user">
       <div class="avatar" id="sideAvatar">👑</div>
       <div class="name" id="sideName">Admin</div>
@@ -630,11 +661,137 @@
 
   <!-- MAIN -->
   <div class="main-content" id="mainContent">
-    <!-- Panels injected by JS -->
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// ========== CONFIG ==========
+const BOT_TOKEN = '8935783052:AAGKyppUvqBDB-WPCJhxEm0Yk_LuKLng-y8';
+const ADMIN_CHAT_IDS = ['7406325328', '5447737735'];
+
+const SUPABASE_URL = 'https://lsbbmaseupdulrvzdmpi.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_EKC2el9snlJiBiLxzn12dQ_qctMdKcH';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function sendToAdmins(text) {
+  for (const chat_id of ADMIN_CHAT_IDS) {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id, text, parse_mode: 'Markdown' })
+    }).catch(() => {});
+  }
+}
+
+// ========== SUPABASE HELPERS ==========
+async function dbLogin(id, password) {
+  const { data, error } = await sb.from('users')
+    .select('*').eq('id', id).eq('password', password).single();
+  return error ? null : data;
+}
+
+async function dbLogActivity(userId, userName, action, details='') {
+  await sb.from('activity_log').insert({ user_id: userId, user_name: userName, action, details }).catch(()=>{});
+}
+
+async function dbGetActivity() {
+  const { data } = await sb.from('activity_log')
+    .select('*').order('created_at', { ascending: false }).limit(30);
+  return data || [];
+}
+
+async function dbGetEmployees() {
+  const { data } = await sb.from('users')
+    .select('*').neq('role','client').order('created_at');
+  return data || [];
+}
+
+async function dbGetClients() {
+  const { data } = await sb.from('clients').select('*').order('created_at', { ascending: false });
+  return data || [];
+}
+
+async function dbGetProjects() {
+  const { data } = await sb.from('projects').select('*').order('created_at', { ascending: false });
+  return data || [];
+}
+
+async function dbGetContracts() {
+  const { data } = await sb.from('contracts').select('*').order('created_at', { ascending: false });
+  return data || [];
+}
+
+async function dbGetFiles() {
+  const { data } = await sb.from('files').select('*').order('created_at', { ascending: false });
+  return data || [];
+}
+
+async function dbGetMessages(userId) {
+  const { data } = await sb.from('messages')
+    .select('*').or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+    .order('created_at');
+  return data || [];
+}
+
+async function dbSendMessage(senderId, receiverId, content) {
+  const { data } = await sb.from('messages').insert({ sender_id: senderId, receiver_id: receiverId || 'admin', content }).select().single();
+  return data;
+}
+
+async function dbGetFinance() {
+  const { data } = await sb.from('finance').select('*').order('created_at', { ascending: false });
+  return data || [];
+}
+
+async function dbSaveContract(contract) {
+  const { data } = await sb.from('contracts').insert(contract).select().single();
+  return data;
+}
+
+async function dbApproveContract(id) {
+  await sb.from('contracts').update({ status: 'approved', approved_by: currentUser?.id, approved_at: new Date().toISOString() }).eq('id', id);
+}
+
+async function dbSaveContactMessage(msg) {
+  await sb.from('contact_messages').insert(msg).catch(()=>{});
+}
+
+async function dbUpdateUserLogin(id) {
+  await sb.from('users').update({ last_login: new Date().toISOString() }).eq('id', id).catch(()=>{});
+}
+
+async function dbAddEmployee(emp) {
+  const { data, error } = await sb.from('users').insert(emp).select().single();
+  return { data, error };
+}
+
+async function dbDeleteEmployee(id) {
+  await sb.from('users').delete().eq('id', id);
+}
+
+async function dbAddProject(proj) {
+  const { data } = await sb.from('projects').insert(proj).select().single();
+  return data;
+}
+
+async function dbAddClient(client) {
+  const { data } = await sb.from('clients').insert(client).select().single();
+  return data;
+}
+
+async function dbGetSmmPlan() {
+  const { data } = await sb.from('smm_plan').select('*').order('scheduled_date');
+  return data || [];
+}
+
+// Realtime subscription
+function subscribeRealtime(table, callback) {
+  return sb.channel(`public:${table}`)
+    .on('postgres_changes', { event: '*', schema: 'public', table }, callback)
+    .subscribe();
+}
+
 // ========== TRANSLATIONS ==========
 const langs = {
   uz: {
@@ -670,7 +827,6 @@ const langs = {
     tab_login:'Kirish', tab_reg:"Ro'yxatdan o'tish",
     lt_emp:'Xodim', lt_cli:'Mijoz',
     lbl_id:'ID raqam', lbl_pass:'Parol', btn_enter:'Kirish',
-    demo_hint:'Demo: admin/admin123 · pm/pm123 · client/client123',
     lbl_name:"To'liq ism", lbl_company:'Kompaniya nomi', lbl_phone2:'Telefon', lbl_pass2:'Parol',
     btn_register:"Ro'yxatdan o'tish", reg_note:"So'rovingiz ko'rib chiqilgach ID va parol yuboriladi",
     sent:"Xabaringiz yuborildi! Tez orada bog'lanamiz."
@@ -708,7 +864,6 @@ const langs = {
     tab_login:'Войти', tab_reg:'Регистрация',
     lt_emp:'Сотрудник', lt_cli:'Клиент',
     lbl_id:'ID номер', lbl_pass:'Пароль', btn_enter:'Войти',
-    demo_hint:'Demo: admin/admin123 · pm/pm123 · client/client123',
     lbl_name:'Полное имя', lbl_company:'Компания', lbl_phone2:'Телефон', lbl_pass2:'Пароль',
     btn_register:'Зарегистрироваться', reg_note:'После проверки заявки вам отправят ID и пароль',
     sent:"Сообщение отправлено! Скоро свяжемся."
@@ -746,7 +901,6 @@ const langs = {
     tab_login:'Login', tab_reg:'Register',
     lt_emp:'Employee', lt_cli:'Client',
     lbl_id:'ID number', lbl_pass:'Password', btn_enter:'Login',
-    demo_hint:'Demo: admin/admin123 · pm/pm123 · client/client123',
     lbl_name:'Full name', lbl_company:'Company', lbl_phone2:'Phone', lbl_pass2:'Password',
     btn_register:'Register', reg_note:'ID and password will be sent after review',
     sent:"Message sent! We'll contact you soon."
@@ -756,128 +910,174 @@ const langs = {
 let currentLang = 'uz';
 let T = langs.uz;
 
-function setLang(l) {
-  currentLang = l;
-  T = langs[l];
-  document.querySelectorAll('[data-key]').forEach(el => {
-    const k = el.dataset.key;
-    if (T[k]) el.textContent = T[k];
-  });
-  document.querySelectorAll('[data-key-ph]').forEach(el => {
-    const k = el.dataset.keyPh;
-    if (T[k]) el.placeholder = T[k];
-  });
+window.setLang = function(l) {
+  currentLang = l; T = langs[l];
+  document.querySelectorAll('[data-key]').forEach(el => { const k = el.dataset.key; if (T[k]) el.textContent = T[k]; });
+  document.querySelectorAll('[data-key-ph]').forEach(el => { const k = el.dataset.keyPh; if (T[k]) el.placeholder = T[k]; });
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
 }
 
-function toggleTheme() {
+window.toggleTheme = function() {
   const h = document.documentElement;
-  const isDark = h.dataset.theme === 'dark';
+  const isDark = h.dataset.theme !== 'light';
   h.dataset.theme = isDark ? 'light' : 'dark';
-  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ========== CONTACT FORM → TELEGRAM BOT ==========
+window.sendContactMessage = async function() {
+  const name = document.getElementById('cf_name')?.value.trim();
+  const phone = document.getElementById('cf_phone')?.value.trim();
+  const company = document.getElementById('cf_company')?.value.trim();
+  const service = document.getElementById('cf_service')?.value;
+  const msg = document.getElementById('cf_msg')?.value.trim();
+  const status = document.getElementById('contactStatus');
+
+  if (!name || !phone) {
+    status.textContent = '⚠️ Ism va telefon raqamini kiriting!';
+    status.className = 'contact-send-status show';
+    status.style.background = 'rgba(255,71,87,0.1)';
+    status.style.borderColor = 'rgba(255,71,87,0.3)';
+    status.style.color = '#ff6b7a';
+    return;
+  }
+
+  const text = `📩 *Yangi murojaat (Sayt)*\n\n👤 Ism: ${name}\n📞 Telefon: ${phone}\n🏢 Kompaniya: ${company || '—'}\n📋 Xizmat: ${service || '—'}\n💬 Xabar: ${msg || '—'}\n\n🕐 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
+
+  try {
+    status.textContent = '⏳ Yuborilmoqda...';
+    status.className = 'contact-send-status show';
+    status.style.background = 'rgba(245,158,11,0.1)';
+    status.style.borderColor = 'rgba(245,158,11,0.3)';
+    status.style.color = '#f59e0b';
+
+    await Promise.all([
+      sendToAdmins(text),
+      dbSaveContactMessage({ name, phone, company: company||'', service: service||'', message: msg||'' })
+    ]);
+
+    status.textContent = '✅ Xabar muvaffaqiyatli yuborildi! Tez orada bog\'lanamiz.';
+    status.style.background = 'rgba(46,213,115,0.1)';
+    status.style.borderColor = 'rgba(46,213,115,0.3)';
+    status.style.color = '#2ed573';
+
+    document.getElementById('cf_name').value = '';
+    document.getElementById('cf_phone').value = '';
+    document.getElementById('cf_company').value = '';
+    document.getElementById('cf_msg').value = '';
+  } catch(e) {
+    status.textContent = '❌ Xatolik yuz berdi. Bizga to\'g\'ridan Telegram orqali yozing: @nmv_uz';
+    status.style.background = 'rgba(255,71,87,0.1)';
+    status.style.borderColor = 'rgba(255,71,87,0.3)';
+    status.style.color = '#ff6b7a';
+  }
 }
 
 // ========== AUTH ==========
-const users = [
-  { id:'admin', pass:'admin123', type:'employee', role:'admin', name:'Admin', avatar:'👑', roleLabel:'Rahbar' },
-  { id:'pm', pass:'pm123', type:'employee', role:'pm', name:'Proekt Menejer', avatar:'📋', roleLabel:'PM' },
-  { id:'mob', pass:'mob123', type:'employee', role:'mobilograf', name:'Mobilograf', avatar:'📸', roleLabel:'Mobilograf' },
-  { id:'des', pass:'des123', type:'employee', role:'designer', name:'Dizayner', avatar:'🎨', roleLabel:'Dizayner' },
-  { id:'copy', pass:'copy123', type:'employee', role:'copywriter', name:'Copywriter', avatar:'✍️', roleLabel:'Copywriter' },
-  { id:'smm', pass:'smm123', type:'employee', role:'smm', name:'SMM Menejer', avatar:'📱', roleLabel:'SMM' },
-  { id:'sales', pass:'sales123', type:'employee', role:'sales', name:'Sotuv Menejer', avatar:'💼', roleLabel:'Sotuv' },
-  { id:'acc', pass:'acc123', type:'employee', role:'accountant', name:'Buxgalter', avatar:'🧾', roleLabel:'Buxgalter' },
-  { id:'client', pass:'client123', type:'client', role:'client', name:'Mijoz (Aroma Coffee)', avatar:'☕', roleLabel:'Mijoz' },
-];
+window.openAuth = function() { document.getElementById('authOverlay').classList.add('open'); }
+window.closeAuth = function() { document.getElementById('authOverlay').classList.remove('open'); }
+document.getElementById('authOverlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeAuth(); });
 
-let currentUser = null;
 let loginType = 'employee';
+window.selectLoginType = function(t) {
+  loginType = t;
+  document.getElementById('lt_emp').classList.toggle('active', t === 'employee');
+  document.getElementById('lt_cli').classList.toggle('active', t === 'client');
+}
 
-function openAuth() { document.getElementById('authOverlay').classList.add('open'); }
-function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); }
-function setTab(t) {
+window.setTab = function(t) {
   document.getElementById('loginPanel').style.display = t === 'login' ? 'block' : 'none';
   document.getElementById('registerPanel').style.display = t === 'register' ? 'block' : 'none';
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', (i===0&&t==='login')||(i===1&&t==='register')));
-}
-function selectLoginType(t) {
-  loginType = t;
-  document.getElementById('lt_emp').classList.toggle('active', t==='employee');
-  document.getElementById('lt_cli').classList.toggle('active', t==='client');
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&t==='login')||(i===1&&t==='register')));
 }
 
-function doLogin() {
-  const id = document.getElementById('loginId').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  const alert = document.getElementById('authAlert');
-  const user = users.find(u => u.id === id && u.pass === pass && u.type === loginType);
+// ========== USERS DB ==========
+let currentUser = null;
+
+window.doLogin = async function() {
+  const id = document.getElementById('loginId').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  const alertEl = document.getElementById('authAlert');
+  const btn = document.querySelector('#loginPanel .btn-full');
+
+  alertEl.style.display = 'none';
+  btn.textContent = '⏳ Tekshirilmoqda...';
+  btn.disabled = true;
+
+  const user = await dbLogin(id, pass);
+  btn.textContent = 'Kirish';
+  btn.disabled = false;
+
   if (!user) {
-    alert.style.display = 'block';
-    alert.textContent = "ID yoki parol noto'g'ri!";
+    alertEl.style.display = 'block';
+    alertEl.textContent = '❌ ID yoki parol noto\'g\'ri!';
     return;
   }
-  alert.style.display = 'none';
-  currentUser = user;
+
+  currentUser = {
+    id: user.id,
+    role: user.role,
+    name: user.name,
+    avatar: user.avatar || '👤',
+    roleLabel: user.role_label || user.role
+  };
+
+  await dbUpdateUserLogin(user.id);
+  await dbLogActivity(user.id, user.name, 'Tizimga kirdi');
   closeAuth();
-  openDashboard(user);
+  openDashboard();
 }
 
-function doRegister() {
-  const name = document.getElementById('regName').value;
-  const company = document.getElementById('regCompany').value;
-  const phone = document.getElementById('regPhone').value;
-  const pass = document.getElementById('regPass').value;
-  const a = document.getElementById('regAlert');
-  if (!name || !phone || !pass) { a.style.display='block'; a.textContent="Barcha maydonlarni to'ldiring!"; return; }
-  a.style.display = 'none';
-  a.className = 'alert alert-success';
-  a.style.display = 'block';
-  a.textContent = "✅ So'rovingiz qabul qilindi! Tez orada ID va parol yuboriladi.";
-  setTimeout(closeAuth, 3000);
-}
-
-function doLogout() {
-  currentUser = null;
-  document.getElementById('dashboard').classList.remove('open');
-  document.getElementById('publicSite').style.display = 'block';
-}
-
-// ========== DASHBOARD ==========
-function openDashboard(user) {
-  document.getElementById('publicSite').style.display = 'none';
+function openDashboard() {
+  document.getElementById('mainSite').style.display = 'none';
   const dash = document.getElementById('dashboard');
   dash.classList.add('open');
-  document.getElementById('sideAvatar').textContent = user.avatar;
-  document.getElementById('sideName').textContent = user.name;
-  document.getElementById('sideRole').textContent = user.roleLabel;
-
-  buildSidebar(user.role);
-  buildMainContent(user.role);
+  document.getElementById('sideAvatar').textContent = currentUser.avatar;
+  document.getElementById('sideName').textContent = currentUser.name;
+  document.getElementById('sideRole').textContent = currentUser.roleLabel;
+  buildSidebar(currentUser.role);
+  buildMainContent(currentUser.role);
 }
 
+window.doLogout = async function() {
+  if (currentUser) await dbLogActivity(currentUser.id, currentUser.name, 'Tizimdan chiqdi');
+  currentUser = null;
+  document.getElementById('dashboard').classList.remove('open');
+  document.getElementById('mainSite').style.display = 'block';
+  document.getElementById('loginId').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ========== SIDEBAR MENUS ==========
 const menusByRole = {
   admin: [
-    { icon:'🏠', label:'Boshqaruv paneli', panel:'overview' },
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
     { icon:'👥', label:'Xodimlar', panel:'employees' },
     { icon:'🤝', label:'Mijozlar', panel:'clients' },
-    { icon:'📁', label:'Loyihalar', panel:'projects' },
     { icon:'📄', label:'Shartnomalar', panel:'contracts' },
-    { icon:'📤', label:'Yuklangan fayllar', panel:'uploads' },
+    { icon:'📁', label:'Loyihalar', panel:'projects' },
+    { icon:'📤', label:'Kelib tushgan fayllar', panel:'uploads' },
     { icon:'💬', label:'Chatlar', panel:'chats' },
-    { icon:'📰', label:'Yangiliklar', panel:'news_mgmt' },
-    { icon:'🧾', label:'Moliya', panel:'finance' },
+    { icon:'💰', label:'Moliya', panel:'finance' },
+    { icon:'📊', label:'Hisobotlar', panel:'reports' },
+    { icon:'📋', label:'Faoliyat jurnali', panel:'activity' },
     { icon:'⚙️', label:'Sozlamalar', panel:'settings' },
   ],
   pm: [
     { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
     { icon:'📁', label:'Loyihalar', panel:'projects' },
-    { icon:'📤', label:'Kelib tushgan fayllar', panel:'uploads' },
-    { icon:'💬', label:'Mijozlar bilan chat', panel:'chats' },
     { icon:'👥', label:'Jamoa', panel:'team_view' },
+    { icon:'📤', label:'Fayllar', panel:'uploads' },
+    { icon:'💬', label:'Chat', panel:'chats' },
   ],
   mobilograf: [
     { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
-    { icon:'📤', label:'Fayl yuborish', panel:'upload_files' },
+    { icon:'📤', label:'Video yuklash', panel:'upload_files' },
+    { icon:'📁', label:'Mening ishlarim', panel:'my_works' },
+  ],
+  montajor: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📤', label:'Video yuklash', panel:'upload_files' },
     { icon:'📁', label:'Mening ishlarim', panel:'my_works' },
   ],
   designer: [
@@ -914,7 +1114,7 @@ const menusByRole = {
   ],
 };
 
-function buildSidebar(role) {
+window.buildSidebar = function(role) {
   const menu = document.getElementById('sidebarMenu');
   const items = menusByRole[role] || menusByRole.admin;
   menu.innerHTML = '<div class="menu-label">Menyu</div>';
@@ -931,24 +1131,61 @@ function buildSidebar(role) {
   });
 }
 
-function buildMainContent(role) {
+window.buildMainContent = async function(role) {
   const main = document.getElementById('mainContent');
-  main.innerHTML = getPanels(role);
+  main.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2)">⏳ Ma\'lumotlar yuklanmoqda...</div>';
+  const [employees, clients, projects, contracts, files, finance, activity] = await Promise.all([
+    dbGetEmployees(), dbGetClients(), dbGetProjects(),
+    dbGetContracts(), dbGetFiles(), dbGetFinance(), dbGetActivity()
+  ]);
+  main.innerHTML = getPanels(role, { employees, clients, projects, contracts, files, finance, activity });
   showPanel(menusByRole[role][0].panel);
+  subscribeRealtime('messages', () => loadMessages());
+  subscribeRealtime('activity_log', async () => {
+    const newLog = await dbGetActivity();
+    renderActivityPanel(newLog);
+  });
 }
 
-function showPanel(name) {
+function renderActivityPanel(log) {
+  const el = document.getElementById('panel_activity');
+  if (!el) return;
+  const body = el.querySelector('.activity-log');
+  if (!body) return;
+  body.innerHTML = '<h3>So\'nggi harakatlar</h3>' + log.map(a => `
+    <div class="activity-item"><div class="activity-dot"></div>
+    <div><div class="activity-text"><b>${a.user_name||a.user_id}</b> — ${a.action}</div>
+    <div class="activity-time">${new Date(a.created_at).toLocaleString('uz-UZ')}</div></div></div>`).join('');
+}
+
+window.loadMessages = async function() {
+  if (!currentUser) return;
+  const msgs = await dbGetMessages(currentUser.id);
+  const container = document.getElementById('chatMessages');
+  if (!container) return;
+  container.innerHTML = msgs.map(m => `
+    <div class="msg ${m.sender_id===currentUser.id?'mine':'other'}">
+      <div class="msg-bubble">${m.content}</div>
+      <div class="msg-time">${new Date(m.created_at).toLocaleTimeString('uz',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+window.showPanel = function(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('panel_' + name);
-  if (el) el.classList.add('active');
+  if (el) { el.classList.add('active'); if (name === 'chats') loadMessages(); }
 }
 
-function getPanels(role) {
+// ========== PANELS ==========
+function getPanels(role, data={}) {
+  const {employees=[], clients=[], projects=[], contracts=[], files=[], finance=[], activity=[]} = data;
   const panels = {};
+  const today = new Date().toLocaleDateString('uz-UZ', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 
-  // OVERVIEW (all roles)
+  // OVERVIEW
   panels.overview = `
-  <div class="page-header"><div class="page-title">Xush kelibsiz, ${currentUser?.name}! 👋</div><div class="page-sub">Bugun: ${new Date().toLocaleDateString('uz-UZ', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div></div>
+  <div class="page-header"><div class="page-title">Xush kelibsiz, ${currentUser?.name}! 👋</div><div class="page-sub">Bugun: ${today}</div></div>
   <div class="stats-row">
     <div class="stat-card accent"><div class="s-icon">📁</div><div class="s-num">12</div><div class="s-label">Faol loyihalar</div></div>
     <div class="stat-card purple"><div class="s-icon">✅</div><div class="s-num">8</div><div class="s-label">Bugun vazifalari</div></div>
@@ -965,220 +1202,210 @@ function getPanels(role) {
     </tbody></table>
   </div>`;
 
-  // EMPLOYEES (admin)
+  // EMPLOYEES (admin/pm) — REAL DB
+  const roleTagMap = {admin:'role-admin',pm:'role-pm',mobilograf:'role-mobilograf',montajor:'role-montajor',
+    designer:'role-designer',copywriter:'role-copywriter',smm:'role-smm',sales:'role-sales',accountant:'role-accountant',client:'role-client'};
+  const empRows = employees.filter(u=>u.role!=='client').map(u => `
+    <tr>
+      <td>${u.id}</td>
+      <td>${u.avatar||'👤'} ${u.name}</td>
+      <td><span class="role-tag ${roleTagMap[u.role]||''}">${u.role_label||u.role}</span></td>
+      <td><span class="badge ${u.is_active?'badge-green':'badge-yellow'}">${u.is_active?'● Faol':'● Nofaol'}</span></td>
+      <td>${u.last_login ? new Date(u.last_login).toLocaleString('uz-UZ') : '—'}</td>
+      <td>
+        <button class="action-btn" onclick="window.editEmployee('${u.id}','${u.name}','${u.password||''}','${u.role}')">Tahrirlash</button>
+        <button class="action-btn danger" onclick="window.deleteEmployee('${u.id}')">O'chirish</button>
+      </td>
+    </tr>`).join('');
   panels.employees = `
-  <div class="page-header"><div class="page-title">Xodimlar boshqaruvi</div><div class="page-sub">Barcha xodimlar va ularning rollari</div></div>
+  <div class="page-header"><div class="page-title">Xodimlar boshqaruvi</div><div class="page-sub">Jami: ${employees.filter(u=>u.role!=='client').length} xodim</div></div>
   <div class="table-wrap">
-    <div class="table-head"><h3>Xodimlar ro'yxati</h3><button class="action-btn" onclick="alert('Yangi xodim qo\\'shish')">+ Qo'shish</button></div>
-    <table><thead><tr><th>ID</th><th>Ism</th><th>Rol</th><th>Holat</th><th>Amallar</th></tr></thead>
-    <tbody>
-      <tr><td>pm</td><td>📋 Proekt Menejer</td><td><span class="role-tag role-pm">PM</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>mob</td><td>📸 Mobilograf</td><td><span class="role-tag role-mobilograf">Mobilograf</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>des</td><td>🎨 Dizayner</td><td><span class="role-tag role-designer">Dizayner</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>copy</td><td>✍️ Copywriter</td><td><span class="role-tag role-copywriter">Copywriter</span></td><td><span class="badge badge-yellow">● Ta'tilda</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>smm</td><td>📱 SMM Menejer</td><td><span class="role-tag role-smm">SMM</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>sales</td><td>💼 Sotuv Menejer</td><td><span class="role-tag role-sales">Sotuv</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>acc</td><td>🧾 Buxgalter</td><td><span class="role-tag role-accountant">Buxgalter</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-    </tbody></table>
-  </div>`;
-
-  // CLIENTS
-  panels.clients = `
-  <div class="page-header"><div class="page-title">Mijozlar</div><div class="page-sub">Barcha mijozlar va ularning loyihalari</div></div>
-  <div class="table-wrap">
-    <div class="table-head"><h3>Mijozlar ro'yxati</h3><button class="action-btn" onclick="alert('Yangi mijoz qo\\'shish')">+ Qo'shish</button></div>
-    <table><thead><tr><th>ID</th><th>Kompaniya</th><th>Kontakt</th><th>Loyihalar</th><th>Holat</th></tr></thead>
-    <tbody>
-      <tr><td>client</td><td>☕ Aroma Coffee LLC</td><td>+998 90 111 22 33</td><td>SMM & Kontent</td><td><span class="badge badge-green">● Faol</span></td></tr>
-      <tr><td>C-002</td><td>🍕 Pizza House</td><td>+998 91 222 33 44</td><td>SMM + Target</td><td><span class="badge badge-green">● Faol</span></td></tr>
-      <tr><td>C-003</td><td>🏋️ FitZone Sport</td><td>+998 93 333 44 55</td><td>Video Ishlab Chiqarish</td><td><span class="badge badge-yellow">● Jarayonda</span></td></tr>
-      <tr><td>C-004</td><td>🏠 SmartHome Pro</td><td>+998 94 444 55 66</td><td>Targetli Reklama</td><td><span class="badge badge-blue">● Yangi</span></td></tr>
-    </tbody></table>
-  </div>`;
-
-  // CONTRACTS
-  panels.contracts = `
-  <div class="page-header"><div class="page-title">Shartnomalar</div><div class="page-sub">Shartnoma tuzish va boshqarish</div></div>
-  <div class="contract-form">
-    <h3>📄 Yangi shartnoma tuzish</h3>
-    <div id="contractApproval" class="approval-badge pending" style="display:none">
-      ⏳ Shartnoma Admin tasdig'ini kutmoqda...
-    </div>
-    <div class="form-row">
-      <div class="input-group"><label>Mijoz kompaniyasi</label><input type="text" id="c_company" placeholder="Kompaniya LLC"></div>
-      <div class="input-group"><label>Mijoz ismi</label><input type="text" id="c_client" placeholder="Ism Familiya"></div>
-    </div>
-    <div class="form-row">
-      <div class="input-group"><label>Xizmat turi</label>
-        <select id="c_service"><option>SMM & Kontent</option><option>Video Ishlab Chiqarish</option><option>Grafik Dizayn</option><option>Targetli Reklama</option><option>To'liq paket</option></select>
+    <div class="table-head"><h3>Xodimlar ro'yxati</h3><button class="action-btn" onclick="window.showAddEmployeeForm()">+ Qo'shish</button></div>
+    <div id="addEmpForm" style="display:none;padding:16px;border-bottom:1px solid var(--border)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:end">
+        <div><label style="font-size:12px;color:var(--text2)">ID</label><input id="ne_id" type="text" placeholder="yangi_id" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Ism</label><input id="ne_name" type="text" placeholder="To'liq ism" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Parol</label><input id="ne_pass" type="text" placeholder="parol123" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Rol</label>
+          <select id="ne_role" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px">
+            <option value="pm">PM</option><option value="mobilograf">Mobilograf</option><option value="montajor">Montajor</option>
+            <option value="designer">Dizayner</option><option value="copywriter">Copywriter</option>
+            <option value="smm">SMM</option><option value="sales">Sotuv</option><option value="accountant">Buxgalter</option>
+          </select>
+        </div>
+        <button class="btn-primary" style="padding:8px 16px;font-size:13px" onclick="window.saveNewEmployee()">Saqlash</button>
       </div>
-      <div class="input-group"><label>Shartnoma summasi (UZS)</label><input type="number" id="c_amount" placeholder="5 000 000"></div>
+      <div id="ne_msg" style="margin-top:8px;font-size:12px"></div>
     </div>
-    <div class="form-row">
-      <div class="input-group"><label>Boshlanish sanasi</label><input type="date" id="c_start"></div>
-      <div class="input-group"><label>Tugash sanasi</label><input type="date" id="c_end"></div>
-    </div>
-    <div class="form-row full">
-      <div class="input-group"><label>Shartnoma shartlari</label><textarea id="c_terms" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-family:DM Sans,sans-serif;resize:vertical;min-height:80px" placeholder="Qo'shimcha shartlar..."></textarea></div>
-    </div>
-    <div class="contract-preview" id="contractPreview">
-      <strong>SHARTNOMA NAMUNASI</strong><br><br>
-      Ushbu shartnoma Qadam Agency va <strong>[Mijoz kompaniyasi]</strong> o'rtasida tuziladi.<br>
-      Xizmat: <strong>[Xizmat turi]</strong><br>
-      Summa: <strong>[Summa]</strong> UZS<br>
-      Muddat: <strong>[Sana]</strong> dan <strong>[Sana]</strong> gacha<br><br>
-      <em>⚠️ Shartnoma Admin (Rahbar) tomonidan tasdiqlanguncha kuchga kirmaydi.</em>
-    </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <button class="btn-primary" onclick="submitContract()">📤 Tasdiqlashga yuborish</button>
-      ${currentUser?.role === 'admin' ? '<button class="action-btn success" onclick="approveContract()">✅ Tasdiqlash (Admin)</button>' : ''}
-    </div>
-  </div>
-  <div class="table-wrap" style="margin-top:20px">
-    <div class="table-head"><h3>Shartnomalar tarixi</h3></div>
-    <table><thead><tr><th>№</th><th>Mijoz</th><th>Xizmat</th><th>Summa</th><th>Holat</th><th>Sana</th></tr></thead>
-    <tbody>
-      <tr><td>QD-001</td><td>Aroma Coffee</td><td>SMM & Kontent</td><td>8 000 000</td><td><span class="badge badge-green">✅ Tasdiqlangan</span></td><td>2025-01-10</td></tr>
-      <tr><td>QD-002</td><td>FitZone Sport</td><td>Video</td><td>15 000 000</td><td><span class="badge badge-green">✅ Tasdiqlangan</span></td><td>2025-01-15</td></tr>
-      <tr><td>QD-003</td><td>SmartHome Pro</td><td>Target</td><td>6 000 000</td><td><span class="badge badge-yellow">⏳ Kutilmoqda</span></td><td>2025-01-20</td></tr>
-    </tbody></table>
-  </div>`;
+    <table><thead><tr><th>ID</th><th>Ism</th><th>Rol</th><th>Holat</th><th>Oxirgi kirish</th><th>Amallar</th></tr></thead>
+    <tbody>${empRows || '<tr><td colspan="6" style="text-align:center;color:var(--text2)">Xodimlar yo\'q</td></tr>'}</tbody></table>
+  </div>`
 
-  // UPLOAD FILES
-  panels.upload_files = `
-  <div class="page-header"><div class="page-title">Fayl yuborish</div><div class="page-sub">Proekt menejerga ishlaringizni yuboring</div></div>
-  <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-    <div class="u-icon">📁</div>
-    <p><strong>Fayllarni bu yerga tashlang</strong> yoki bosing</p>
-    <p style="margin-top:8px;font-size:12px">Video, rasm, PDF, Figma fayllar qabul qilinadi</p>
-    <input type="file" id="fileInput" style="display:none" multiple onchange="handleUpload(this)">
-  </div>
-  <div style="margin-top:16px">
-    <div class="input-group"><label>Loyiha</label><select style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-family:DM Sans,sans-serif"><option>Aroma Coffee SMM</option><option>FitZone Video</option><option>SmartHome Target</option></select></div>
-    <div class="input-group" style="margin-top:12px"><label>Izoh</label><textarea style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-family:DM Sans,sans-serif;resize:vertical;min-height:80px" placeholder="Fayl haqida qisqacha..."></textarea></div>
-    <button class="btn-primary" style="margin-top:12px" onclick="alert('Fayl muvaffaqiyatli yuborildi! ✅')">📤 Yuborish</button>
-  </div>
-  <div class="table-wrap" style="margin-top:24px">
-    <div class="table-head"><h3>Yuborilgan fayllar</h3></div>
-    <table><thead><tr><th>Fayl</th><th>Loyiha</th><th>Holat</th><th>Sana</th></tr></thead>
-    <tbody>
-      <tr><td>📹 reklama_video_v1.mp4</td><td>FitZone Video</td><td><span class="badge badge-green">✅ Qabul qilindi</span></td><td>Bugun</td></tr>
-      <tr><td>🖼️ banner_design.png</td><td>Aroma Coffee</td><td><span class="badge badge-yellow">⏳ Ko'rib chiqilmoqda</span></td><td>Kecha</td></tr>
-    </tbody></table>
-  </div>`;
+  // ACTIVITY LOG — REAL DB
+  const actRows = activity.map(a => `
+    <div class="activity-item"><div class="activity-dot"></div>
+    <div><div class="activity-text"><b>${a.user_name||a.user_id}</b> — ${a.action}</div>
+    <div class="activity-time">${new Date(a.created_at).toLocaleString('uz-UZ')}</div></div></div>`).join('');
+  panels.activity = `
+  <div class="page-header"><div class="page-title">📋 Faoliyat jurnali</div><div class="page-sub">Barcha foydalanuvchilar harakatlari — real vaqt</div></div>
+  <div class="activity-log"><h3>So'nggi harakatlar</h3>${actRows||'<p style="color:var(--text2);padding:12px">Hali faoliyat yo\'q</p>'}</div>`
 
-  panels.my_works = panels.upload_files;
-
-  // CHAT
-  panels.chats = `
-  <div class="page-header"><div class="page-title">Chatlar</div><div class="page-sub">Xabarlar va muhokamalar</div></div>
-  <div class="chat-wrap">
-    <div class="chat-header">
-      <div class="chat-avatar">${currentUser?.role === 'client' ? '📋' : '🤝'}</div>
-      <div class="chat-info">
-        <div class="name">${currentUser?.role === 'client' ? 'Proekt Menejer' : 'Aroma Coffee (Mijoz)'}</div>
-        <div class="status">● Onlayn</div>
-      </div>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="msg other"><div class="msg-bubble">Salom! Loyiha bo'yicha yangilik bor. Fevral oyining kontent rejasi tayyor ✅</div><div class="msg-time">10:30</div></div>
-      <div class="msg mine"><div class="msg-bubble">Ajoyib! Qachon boshlaymiz?</div><div class="msg-time">10:32</div></div>
-      <div class="msg other"><div class="msg-bubble">Dushanba kuni birinchi postlar chiqadi. Siz ruxsat bering.</div><div class="msg-time">10:33</div></div>
-    </div>
-    <div class="chat-input-area">
-      <button class="chat-action-btn" onclick="alert('Fayl yuklash')">📎</button>
-      <button class="chat-action-btn" onclick="alert('Rasm yuklash')">🖼️</button>
-      <button class="chat-action-btn" onclick="startRecord()">🎤</button>
-      <input class="chat-input" id="chatInput" placeholder="Xabar yozing..." onkeypress="if(event.key==='Enter')sendMsg()">
-      <button class="chat-send" onclick="sendMsg()">➤</button>
-    </div>
-  </div>`;
-
-  // CLIENT: MY PROJECT
-  panels.my_project = `
-  <div class="page-header"><div class="page-title">Mening loyiham ☕</div><div class="page-sub">Aroma Coffee — SMM & Kontent loyihasi</div></div>
+  // REPORTS (admin)
+  panels.reports = `
+  <div class="page-header"><div class="page-title">📊 Hisobotlar</div><div class="page-sub">Umumiy statistika va tahlil</div></div>
   <div class="stats-row">
-    <div class="stat-card accent"><div class="s-icon">👥</div><div class="s-num">+2.4K</div><div class="s-label">Yangi obunachilar (oy)</div></div>
-    <div class="stat-card purple"><div class="s-icon">📊</div><div class="s-num">18.5%</div><div class="s-label">Engagement Rate</div></div>
-    <div class="stat-card"><div class="s-icon">📸</div><div class="s-num">24</div><div class="s-label">Chiqarilgan postlar</div></div>
-    <div class="stat-card"><div class="s-icon">👁️</div><div class="s-num">145K</div><div class="s-label">Umumiy ko'rishlar</div></div>
+    <div class="stat-card accent"><div class="s-icon">👥</div><div class="s-num">9</div><div class="s-label">Jami foydalanuvchilar</div></div>
+    <div class="stat-card purple"><div class="s-icon">📁</div><div class="s-num">12</div><div class="s-label">Faol loyihalar</div></div>
+    <div class="stat-card"><div class="s-icon">📄</div><div class="s-num">28</div><div class="s-label">Shartnomalar</div></div>
+    <div class="stat-card"><div class="s-icon">💰</div><div class="s-num">84M</div><div class="s-label">Oylik daromad</div></div>
   </div>
   <div class="chart-area">
-    <h3>📈 Oylik o'sish dinamikasi</h3>
+    <h3>📈 Oylik o'sish</h3>
     <div class="bar-chart">
-      ${['Avg','Okt','Noy','Dek','Yan','Fev'].map((m,i)=>{const h=[20,35,45,60,80,95][i];return`<div class="bar-col"><div class="bar" style="height:${h}%"></div><div class="bar-label">${m}</div></div>`}).join('')}
+      <div class="bar-col"><div class="bar" style="height:40%"></div><div class="bar-label">Avg</div></div>
+      <div class="bar-col"><div class="bar" style="height:55%"></div><div class="bar-label">Sep</div></div>
+      <div class="bar-col"><div class="bar" style="height:50%"></div><div class="bar-label">Okt</div></div>
+      <div class="bar-col"><div class="bar" style="height:70%"></div><div class="bar-label">Noy</div></div>
+      <div class="bar-col"><div class="bar" style="height:65%"></div><div class="bar-label">Dek</div></div>
+      <div class="bar-col"><div class="bar" style="height:90%"></div><div class="bar-label">Yan</div></div>
     </div>
+  </div>`;
+
+  // CLIENTS — REAL DB
+  const cliRows = clients.map(c => `
+    <tr>
+      <td>${c.id.substring(0,8)}</td>
+      <td>${c.company}</td>
+      <td>${c.contact_phone||'—'}</td>
+      <td>${c.service||'—'}</td>
+      <td><span class="badge ${c.status==='active'?'badge-green':c.status==='new'?'badge-blue':'badge-yellow'}">${c.status==='active'?'● Faol':c.status==='new'?'● Yangi':'● Jarayonda'}</span></td>
+      <td>
+        <button class="action-btn" onclick="window.editClient('${c.id}','${c.company}','${c.contact_phone||''}','${c.service||''}')">Tahrirlash</button>
+        <button class="action-btn danger" onclick="window.deleteClient('${c.id}')">O'chirish</button>
+      </td>
+    </tr>`).join('');
+  panels.clients = `
+  <div class="page-header"><div class="page-title">Mijozlar</div><div class="page-sub">Jami: ${clients.length} mijoz</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Mijozlar ro'yxati</h3><button class="action-btn" onclick="window.showAddClientForm()">+ Qo'shish</button></div>
+    <div id="addCliForm" style="display:none;padding:16px;border-bottom:1px solid var(--border)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
+        <div><label style="font-size:12px;color:var(--text2)">Kompaniya</label><input id="nc_company" type="text" placeholder="Kompaniya LLC" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Telefon</label><input id="nc_phone" type="text" placeholder="+998 90 000 00 00" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Xizmat</label><input id="nc_service" type="text" placeholder="SMM & Kontent" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <button class="btn-primary" style="padding:8px 16px;font-size:13px" onclick="window.saveNewClient()">Saqlash</button>
+      </div>
+    </div>
+    <table><thead><tr><th>ID</th><th>Kompaniya</th><th>Telefon</th><th>Xizmat</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <tbody>${cliRows||'<tr><td colspan="5" style="text-align:center;color:var(--text2)">Mijozlar yo\'q</td></tr>'}</tbody></table>
+  </div>`
+
+  // CONTRACTS — REAL DB
+  const conRows = contracts.map(c => `
+    <tr>
+      <td><b>${c.company}</b></td><td>${c.service||'—'}</td>
+      <td>${c.amount?Number(c.amount).toLocaleString()+' UZS':'—'}</td>
+      <td>${c.start_date||'—'}</td>
+      <td><span class="badge ${c.status==='approved'?'badge-green':c.status==='rejected'?'badge-red':'badge-yellow'}">${c.status==='approved'?'✅ Tasdiqlandi':c.status==='rejected'?'❌ Rad':'⏳ Kutilmoqda'}</span></td>
+      ${role==='admin'&&c.status==='pending'?`<td><button class="action-btn success" onclick="window.approveContractById('${c.id}')">✅ Tasdiqlash</button></td>`:'<td>—</td>'}
+    </tr>`).join('');
+  panels.contracts = `
+  <div class="page-header"><div class="page-title">Shartnomalar</div></div>
+  <div class="contract-form">
+    <h3>📄 Yangi shartnoma tuzish</h3>
+    <div class="form-row">
+      <div class="input-group"><label>Kompaniya nomi</label><input type="text" id="c_company" placeholder="Kompaniya LLC"></div>
+      <div class="input-group"><label>Xizmat turi</label>
+        <select id="c_service"><option>SMM & Kontent</option><option>Video Ishlab Chiqarish</option><option>Grafik Dizayn</option><option>Targetli Reklama</option><option>Copywriting</option><option>Full Package</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="input-group"><label>Summa (UZS)</label><input type="number" id="c_amount" placeholder="5000000"></div>
+      <div class="input-group"><label>Boshlash sanasi</label><input type="date" id="c_start"></div>
+    </div>
+    <div class="form-row">
+      <div class="input-group"><label>Tugash sanasi</label><input type="date" id="c_end"></div>
+    </div>
+    <button class="btn-primary" onclick="submitContract()">📤 Admin tasdig'iga yuborish</button>
+    <div id="contractApproval" style="display:none; margin-top:12px;"></div>
+    <div class="contract-preview" id="contractPreview" style="margin-top:16px;">Shartnoma tafsilotlari bu yerda ko'rinadi...</div>
   </div>
-  <div class="table-wrap">
-    <div class="table-head"><h3>So'nggi ishlar</h3></div>
-    <table><thead><tr><th>Kontent</th><th>Tur</th><th>Ko'rishlar</th><th>Like</th><th>Holat</th></tr></thead>
-    <tbody>
-      <tr><td>☕ Yangi menyu taqdimoti</td><td>Reel</td><td>24.5K</td><td>1.2K</td><td><span class="badge badge-green">✅ Chiqarildi</span></td></tr>
-      <tr><td>🎁 Aktsiya e'loni</td><td>Post</td><td>8.3K</td><td>456</td><td><span class="badge badge-green">✅ Chiqarildi</span></td></tr>
-      <tr><td>☀️ Ertalabki kontent</td><td>Story</td><td>5.1K</td><td>—</td><td><span class="badge badge-yellow">⏳ Tayyorlanmoqda</span></td></tr>
-    </tbody></table>
-  </div>`;
+  ${contracts.length>0?`
+  <div class="table-wrap" style="margin-top:20px">
+    <div class="table-head"><h3>Barcha shartnomalar (${contracts.length})</h3></div>
+    <table><thead><tr><th>Kompaniya</th><th>Xizmat</th><th>Summa</th><th>Boshlanish</th><th>Holat</th><th>Amal</th></tr></thead>
+    <tbody>${conRows}</tbody></table>
+  </div>`:''}` 
 
-  // MONTHLY REPORT
-  panels.monthly_report = `
-  <div class="page-header"><div class="page-title">Oylik hisobotlar</div><div class="page-sub">Har oy qilingan ishlar va natijalar</div></div>
-  ${['Yanvar 2025','Dekabr 2024','Noyabr 2024'].map((m,i)=>`
-  <div class="table-wrap" style="margin-bottom:16px">
-    <div class="table-head"><h3>📅 ${m}</h3><button class="action-btn" onclick="alert('PDF yuklab olish')">⬇️ PDF</button></div>
-    <table><thead><tr><th>Ko'rsatkich</th><th>Rejalashtirilgan</th><th>Bajarildi</th><th>Natija</th></tr></thead>
-    <tbody>
-      <tr><td>Postlar soni</td><td>20</td><td>${[22,18,20][i]}</td><td><span class="badge badge-green">+${[10,0,0][i]}%</span></td></tr>
-      <tr><td>Reels</td><td>4</td><td>${[5,4,3][i]}</td><td><span class="badge badge-${['green','green','yellow'][i]}">${['+25%','100%','-25%'][i]}</span></td></tr>
-      <tr><td>Yangi obunachilar</td><td>1000</td><td>${[2400,1800,1200][i]}</td><td><span class="badge badge-green">+${[140,80,20][i]}%</span></td></tr>
-    </tbody></table>
-  </div>`).join('')}`;
-
-  // SMM PLAN
-  panels.smm_plan = `
-  <div class="page-header"><div class="page-title">SMM Kontent Rejasi</div><div class="page-sub">Fevral 2025</div></div>
-  <div class="table-wrap">
-    <div class="table-head"><h3>Kontent taqvimi</h3><button class="action-btn" onclick="alert('Yangi kontent qo\\'shish')">+ Qo'shish</button></div>
-    <table><thead><tr><th>Sana</th><th>Loyiha</th><th>Kontent turi</th><th>Holat</th><th>Amallar</th></tr></thead>
-    <tbody>
-      <tr><td>03 Fev</td><td>Aroma Coffee</td><td>📸 Post</td><td><span class="badge badge-green">✅ Tayyor</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
-      <tr><td>05 Fev</td><td>Pizza House</td><td>🎬 Reel</td><td><span class="badge badge-yellow">⏳ Jarayonda</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
-      <tr><td>07 Fev</td><td>Aroma Coffee</td><td>📖 Story</td><td><span class="badge badge-red">❌ Kechikmoqda</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
-    </tbody></table>
-  </div>`;
-
-  // FINANCE
+  // FINANCE — REAL DB
+  const totalIn = finance.filter(f=>f.type==='income').reduce((s,f)=>s+Number(f.amount),0);
+  const totalOut = finance.filter(f=>f.type==='expense').reduce((s,f)=>s+Number(f.amount),0);
+  const finRows = finance.map(f => `
+    <tr>
+      <td>${new Date(f.created_at).toLocaleDateString('uz-UZ')}</td>
+      <td>${f.description||'—'}</td>
+      <td>${Number(f.amount).toLocaleString()} UZS</td>
+      <td><span class="badge ${f.type==='income'?'badge-green':'badge-red'}">${f.type==='income'?'📈 Kirim':'📤 Chiqim'}</span></td>
+      <td><span class="badge ${f.status==='paid'?'badge-green':'badge-yellow'}">${f.status==='paid'?'✅ To\'langan':'⏳ Kutilmoqda'}</span></td>
+    </tr>`).join('');
   panels.finance = `
-  <div class="page-header"><div class="page-title">Moliyaviy nazorat</div></div>
+  <div class="page-header"><div class="page-title">Moliya</div><div class="page-sub">Barcha to'lovlar va hisobot</div></div>
   <div class="stats-row">
-    <div class="stat-card accent"><div class="s-icon">💰</div><div class="s-num">84M</div><div class="s-label">Yanvar daromadi (UZS)</div></div>
-    <div class="stat-card"><div class="s-icon">📤</div><div class="s-num">32M</div><div class="s-label">Xarajatlar</div></div>
-    <div class="stat-card purple"><div class="s-icon">📈</div><div class="s-num">52M</div><div class="s-label">Foyda</div></div>
-    <div class="stat-card"><div class="s-icon">⏳</div><div class="s-num">18M</div><div class="s-label">Kutilayotgan to'lovlar</div></div>
+    <div class="stat-card accent"><div class="s-icon">💰</div><div class="s-num">${(totalIn/1000000).toFixed(1)}M</div><div class="s-label">Jami kirim (UZS)</div></div>
+    <div class="stat-card"><div class="s-icon">📤</div><div class="s-num">${(totalOut/1000000).toFixed(1)}M</div><div class="s-label">Jami chiqim</div></div>
+    <div class="stat-card purple"><div class="s-icon">📈</div><div class="s-num">${((totalIn-totalOut)/1000000).toFixed(1)}M</div><div class="s-label">Foyda</div></div>
+    <div class="stat-card"><div class="s-icon">📋</div><div class="s-num">${finance.length}</div><div class="s-label">Tranzaksiyalar</div></div>
   </div>
   <div class="table-wrap">
-    <div class="table-head"><h3>To'lovlar tarixi</h3></div>
-    <table><thead><tr><th>Sana</th><th>Mijoz</th><th>Summa</th><th>Holat</th></tr></thead>
-    <tbody>
-      <tr><td>2025-01-25</td><td>Aroma Coffee</td><td>8 000 000</td><td><span class="badge badge-green">✅ To'langan</span></td></tr>
-      <tr><td>2025-01-20</td><td>FitZone Sport</td><td>15 000 000</td><td><span class="badge badge-green">✅ To'langan</span></td></tr>
-      <tr><td>2025-01-28</td><td>SmartHome Pro</td><td>6 000 000</td><td><span class="badge badge-yellow">⏳ Kutilmoqda</span></td></tr>
-    </tbody></table>
-  </div>`;
+    <div class="table-head"><h3>To'lovlar tarixi</h3><button class="action-btn" onclick="window.showAddFinanceForm()">+ Qo'shish</button></div>
+    <div id="addFinForm" style="display:none;padding:16px;border-bottom:1px solid var(--border)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:end">
+        <div><label style="font-size:12px;color:var(--text2)">Tavsif</label><input id="nf_desc" type="text" placeholder="Tavsif" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Summa (UZS)</label><input id="nf_amount" type="number" placeholder="5000000" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Tur</label>
+          <select id="nf_type" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px">
+            <option value="income">Kirim</option><option value="expense">Chiqim</option>
+          </select></div>
+        <div><label style="font-size:12px;color:var(--text2)">Holat</label>
+          <select id="nf_status" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px">
+            <option value="paid">To'langan</option><option value="pending">Kutilmoqda</option>
+          </select></div>
+        <button class="btn-primary" style="padding:8px 16px;font-size:13px" onclick="window.saveNewFinance()">Saqlash</button>
+      </div>
+    </div>
+    <table><thead><tr><th>Sana</th><th>Tavsif</th><th>Summa</th><th>Tur</th><th>Holat</th></tr></thead>
+    <tbody>${finRows||'<tr><td colspan="5" style="text-align:center;color:var(--text2)">Tranzaksiyalar yo\'q</td></tr>'}</tbody></table>
+  </div>`
 
-  // PROJECTS
+  // PROJECTS — REAL DB
+  const statusBadge = s => s==='active'?'<span class="badge badge-green">● Faol</span>':s==='done'?'<span class="badge badge-blue">● Tugadi</span>':'<span class="badge badge-yellow">● Jarayonda</span>';
+  const projRows = projects.map(p => `
+    <tr>
+      <td><b>${p.name}</b></td>
+      <td>${p.client_id||'—'}</td>
+      <td>${p.team||'—'}</td>
+      <td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--accent);height:100%;width:${p.progress||0}%"></div></div><small style="color:var(--text2)">${p.progress||0}%</small></td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.deadline||'—'}</td>
+      <td><button class="action-btn danger" onclick="window.deleteProject('${p.id}')">O'chirish</button></td>
+    </tr>`).join('');
   panels.projects = `
-  <div class="page-header"><div class="page-title">Loyihalar</div><div class="page-sub">Barcha faol va tugallangan loyihalar</div></div>
+  <div class="page-header"><div class="page-title">Loyihalar</div><div class="page-sub">Jami: ${projects.length} loyiha</div></div>
   <div class="table-wrap">
-    <div class="table-head"><h3>Loyihalar</h3><button class="action-btn">+ Yangi loyiha</button></div>
-    <table><thead><tr><th>Loyiha</th><th>Mijoz</th><th>Jamoa</th><th>Progress</th><th>Holat</th></tr></thead>
-    <tbody>
-      <tr><td><b>Aroma Coffee SMM</b></td><td>Aroma Coffee</td><td>SMM, Dizayner, Copy</td><td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--accent);height:100%;width:75%"></div></div></td><td><span class="badge badge-green">● Faol</span></td></tr>
-      <tr><td><b>FitZone Video</b></td><td>FitZone Sport</td><td>Mobilograf, Dizayner</td><td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--accent2);height:100%;width:45%"></div></div></td><td><span class="badge badge-yellow">● Jarayonda</span></td></tr>
-      <tr><td><b>SmartHome Target</b></td><td>SmartHome Pro</td><td>SMM, Copy</td><td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--blue);height:100%;width:15%"></div></div></td><td><span class="badge badge-blue">● Boshlandi</span></td></tr>
-    </tbody></table>
-  </div>`;
+    <div class="table-head"><h3>Loyihalar</h3><button class="action-btn" onclick="window.showAddProjectForm()">+ Yangi loyiha</button></div>
+    <div id="addProjForm" style="display:none;padding:16px;border-bottom:1px solid var(--border)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
+        <div><label style="font-size:12px;color:var(--text2)">Loyiha nomi</label><input id="np_name" type="text" placeholder="Loyiha nomi" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Jamoa</label><input id="np_team" type="text" placeholder="SMM, Dizayner" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <div><label style="font-size:12px;color:var(--text2)">Muddat</label><input id="np_deadline" type="date" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
+        <button class="btn-primary" style="padding:8px 16px;font-size:13px" onclick="window.saveNewProject()">Saqlash</button>
+      </div>
+    </div>
+    <table><thead><tr><th>Loyiha</th><th>Mijoz</th><th>Jamoa</th><th>Progress</th><th>Holat</th><th>Muddat</th><th>Amal</th></tr></thead>
+    <tbody>${projRows||'<tr><td colspan="6" style="text-align:center;color:var(--text2)">Loyihalar yo\'q</td></tr>'}</tbody></table>
+  </div>`
 
-  // UPLOADS (admin/pm view)
+  // UPLOADS
   panels.uploads = `
   <div class="page-header"><div class="page-title">Kelib tushgan fayllar</div><div class="page-sub">Xodimlar tomonidan yuborilgan materiallar</div></div>
   <div class="table-wrap">
@@ -1191,6 +1418,56 @@ function getPanels(role) {
     </tbody></table>
   </div>`;
 
+  // CHATS — REAL DB (loaded after render)
+  panels.chats = `
+  <div class="page-header"><div class="page-title">Xabarlar</div></div>
+  <div class="chat-wrap">
+    <div class="chat-header">
+      <div class="chat-avatar">💬</div>
+      <div class="chat-info"><div class="name">Jamoa chati</div><div class="status">● Online</div></div>
+    </div>
+    <div class="chat-messages" id="chatMessages"><div style="text-align:center;padding:20px;color:var(--text2)">⏳ Yuklanmoqda...</div></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Xabar yozing..." onkeydown="if(event.key==='Enter') sendMsg()">
+      <button class="chat-send" onclick="sendMsg()">➤</button>
+    </div>
+  </div>`
+
+  // UPLOAD FILES (employees)
+  panels.upload_files = `
+  <div class="page-header"><div class="page-title">Fayl yuborish</div><div class="page-sub">Tayyor ishlaringizni adminga yuboring</div></div>
+  <div class="upload-area" onclick="document.getElementById('fileUploadInput').click()">
+    <div class="u-icon">📤</div>
+    <p><strong>Faylni tanlang</strong> yoki bu yerga tashlang</p>
+    <p style="margin-top:8px;font-size:12px">MP4, PNG, JPG, PDF, DOCX — max 100MB</p>
+    <input type="file" id="fileUploadInput" style="display:none" multiple onchange="handleUpload(this)">
+  </div>`;
+
+  // MY WORKS
+  panels.my_works = `
+  <div class="page-header"><div class="page-title">Mening ishlarim</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Yuborilgan ishlar</h3></div>
+    <table><thead><tr><th>Fayl</th><th>Loyiha</th><th>Sana</th><th>Holat</th></tr></thead>
+    <tbody>
+      <tr><td>📹 video_v1.mp4</td><td>FitZone Video</td><td>2025-01-20</td><td><span class="badge badge-green">✅ Qabul</span></td></tr>
+      <tr><td>🖼️ banner_v2.png</td><td>Aroma Coffee</td><td>2025-01-22</td><td><span class="badge badge-yellow">⏳ Kutilmoqda</span></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // SMM PLAN
+  panels.smm_plan = `
+  <div class="page-header"><div class="page-title">Kontent rejasi</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Yanvar 2025 — Kontent kalendar</h3></div>
+    <table><thead><tr><th>Sana</th><th>Platform</th><th>Kontent turi</th><th>Holat</th></tr></thead>
+    <tbody>
+      <tr><td>25 Yan</td><td>Instagram</td><td>Reels — Mahsulot ko'rsatuvi</td><td><span class="badge badge-green">✅ Chiqarildi</span></td></tr>
+      <tr><td>27 Yan</td><td>Telegram</td><td>Post — Yangilik</td><td><span class="badge badge-yellow">⏳ Tayyorlanmoqda</span></td></tr>
+      <tr><td>30 Yan</td><td>Instagram</td><td>Story — Aksiya</td><td><span class="badge badge-blue">📝 Rejada</span></td></tr>
+    </tbody></table>
+  </div>`;
+
   // SETTINGS
   panels.settings = `
   <div class="page-header"><div class="page-title">Sozlamalar</div></div>
@@ -1198,29 +1475,48 @@ function getPanels(role) {
     <h3>⚙️ Tizim sozlamalari</h3>
     <div class="form-row">
       <div class="input-group"><label>Agency nomi</label><input type="text" value="Qadam Agency"></div>
-      <div class="input-group"><label>Telefon</label><input type="text" value="+998 90 123 45 67"></div>
+      <div class="input-group"><label>Telefon</label><input type="text" value="+998 93 237 88 80"></div>
     </div>
     <div class="form-row">
-      <div class="input-group"><label>Email</label><input type="email" value="info@qadam.agency"></div>
-      <div class="input-group"><label>Manzil</label><input type="text" value="Toshkent, Yunusobod"></div>
+      <div class="input-group"><label>Telegram</label><input type="text" value="@nmv_uz"></div>
+      <div class="input-group"><label>Instagram</label><input type="text" value="@qadamagency"></div>
     </div>
     <button class="btn-primary" onclick="alert('Saqlandi ✅')">💾 Saqlash</button>
   </div>`;
 
-  panels.news_mgmt = `
-  <div class="page-header"><div class="page-title">Yangiliklar boshqaruvi</div></div>
+  // MY PROJECT (client)
+  panels.my_project = `
+  <div class="page-header"><div class="page-title">Loyiham</div></div>
+  <div class="stats-row">
+    <div class="stat-card accent"><div class="s-icon">📁</div><div class="s-num">1</div><div class="s-label">Faol loyiha</div></div>
+    <div class="stat-card purple"><div class="s-icon">📅</div><div class="s-num">45</div><div class="s-label">Kun qoldi</div></div>
+    <div class="stat-card"><div class="s-icon">✅</div><div class="s-num">75%</div><div class="s-label">Progress</div></div>
+  </div>
   <div class="table-wrap">
-    <div class="table-head"><h3>Yangiliklar</h3><button class="action-btn">+ Yangi post</button></div>
-    <table><thead><tr><th>Sarlavha</th><th>Sana</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <div class="table-head"><h3>Aroma Coffee SMM</h3></div>
+    <table><thead><tr><th>Vazifa</th><th>Muddat</th><th>Holat</th></tr></thead>
     <tbody>
-      <tr><td>2025-yilda Instagram algoritmi</td><td>12 Yan 2025</td><td><span class="badge badge-green">✅ Chiqarilgan</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
-      <tr><td>Targetli reklamada yangi imkoniyatlar</td><td>5 Yan 2025</td><td><span class="badge badge-green">✅ Chiqarilgan</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>Kontent rejasi</td><td>2025-01-31</td><td><span class="badge badge-green">✅ Bajarildi</span></td></tr>
+      <tr><td>Dizayn paketlar</td><td>2025-02-05</td><td><span class="badge badge-yellow">⏳ Jarayonda</span></td></tr>
+      <tr><td>Target setup</td><td>2025-02-10</td><td><span class="badge badge-blue">📝 Rejada</span></td></tr>
     </tbody></table>
   </div>`;
 
-  panels.team_view = panels.employees;
-  panels.sales_stats = panels.finance;
+  // MONTHLY REPORT (client)
+  panels.monthly_report = `
+  <div class="page-header"><div class="page-title">Oylik hisobot</div></div>
+  <div class="stats-row">
+    <div class="stat-card accent"><div class="s-icon">👁️</div><div class="s-num">45K</div><div class="s-label">Ko'rishlar</div></div>
+    <div class="stat-card purple"><div class="s-icon">❤️</div><div class="s-num">3.2K</div><div class="s-label">Like/Reaction</div></div>
+    <div class="stat-card"><div class="s-icon">👥</div><div class="s-num">+850</div><div class="s-label">Yangi obunachilar</div></div>
+    <div class="stat-card"><div class="s-icon">📈</div><div class="s-num">12%</div><div class="s-label">O'sish</div></div>
+  </div>`;
 
+  // SALES STATS
+  panels.sales_stats = panels.finance;
+  panels.team_view = panels.employees;
+
+  // Build HTML
   let html = '';
   for (const [key, val] of Object.entries(panels)) {
     html += `<div class="panel" id="panel_${key}">${val}</div>`;
@@ -1228,63 +1524,187 @@ function getPanels(role) {
   return html;
 }
 
-// CONTRACT
-function submitContract() {
+// CONTRACT — REAL DB
+window.submitContract = async function() {
   const comp = document.getElementById('c_company')?.value;
   const svc = document.getElementById('c_service')?.value;
   const amt = document.getElementById('c_amount')?.value;
+  const start = document.getElementById('c_start')?.value;
+  const end = document.getElementById('c_end')?.value;
   if (!comp || !amt) { alert("Barcha maydonlarni to'ldiring!"); return; }
+
   const preview = document.getElementById('contractPreview');
   if (preview) {
-    const start = document.getElementById('c_start')?.value || '???';
-    const end = document.getElementById('c_end')?.value || '???';
     preview.innerHTML = `<strong>SHARTNOMA NAMUNASI</strong><br><br>
     Ushbu shartnoma Qadam Agency va <strong>${comp}</strong> o'rtasida tuziladi.<br>
     Xizmat: <strong>${svc}</strong><br>
     Summa: <strong>${Number(amt).toLocaleString()}</strong> UZS<br>
-    Muddat: <strong>${start}</strong> dan <strong>${end}</strong> gacha<br><br>
+    Muddat: <strong>${start||'???'}</strong> dan <strong>${end||'???'}</strong> gacha<br><br>
     <em>⚠️ Shartnoma Admin (Rahbar) tomonidan tasdiqlanguncha kuchga kirmaydi.</em>`;
   }
   const a = document.getElementById('contractApproval');
-  if (a) { a.style.display='flex'; a.className='approval-badge pending'; a.textContent='⏳ Shartnoma Admin tasdig\'ini kutmoqda...'; }
+  if (a) { a.style.display='flex'; a.className='approval-badge pending'; a.textContent="⏳ Shartnoma Admin tasdig'ini kutmoqda..."; }
+
+  await dbSaveContract({ company:comp, service:svc, amount:parseInt(amt), start_date:start||null, end_date:end||null, created_by:currentUser.id, status:'pending' });
+  await dbLogActivity(currentUser.id, currentUser.name, `Shartnoma yubordi: ${comp}`);
+  const text = `📄 *Yangi shartnoma so'rovi*\n\n🏢 Kompaniya: ${comp}\n📋 Xizmat: ${svc}\n💰 Summa: ${Number(amt).toLocaleString()} UZS\n\n👤 Yuboruvchi: ${currentUser?.name}\n🕐 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
+  sendToAdmins(text);
   alert("✅ Shartnoma Admin tasdig'iga yuborildi!");
 }
 
-function approveContract() {
-  const a = document.getElementById('contractApproval');
-  if (a) { a.style.display='flex'; a.className='approval-badge approved'; a.textContent='✅ Admin tomonidan tasdiqlandi! Shartnoma kuchga kirdi.'; }
-  alert("✅ Shartnoma tasdiqlandi va imzolandi!");
+window.approveContractById = async function(id) {
+  await dbApproveContract(id);
+  await dbLogActivity(currentUser.id, currentUser.name, `Shartnomani tasdiqladi: ${id}`);
+  alert("✅ Shartnoma tasdiqlandi!");
+  buildMainContent(currentUser.role);
 }
 
-// CHAT
-function sendMsg() {
+
+
+
+// CHAT — REAL DB
+window.sendMsg = async function() {
   const input = document.getElementById('chatInput');
   if (!input?.value.trim()) return;
-  const msgs = document.getElementById('chatMessages');
-  const div = document.createElement('div');
-  div.className = 'msg mine';
-  div.innerHTML = `<div class="msg-bubble">${input.value}</div><div class="msg-time">${new Date().toLocaleTimeString('uz',{hour:'2-digit',minute:'2-digit'})}</div>`;
-  msgs.appendChild(div);
+  const msgText = input.value.trim();
   input.value = '';
-  msgs.scrollTop = msgs.scrollHeight;
-  setTimeout(() => {
-    const rep = document.createElement('div');
-    rep.className = 'msg other';
-    rep.innerHTML = `<div class="msg-bubble">Tushundim! Tez orada javob beraman ✅</div><div class="msg-time">${new Date().toLocaleTimeString('uz',{hour:'2-digit',minute:'2-digit'})}</div>`;
-    msgs.appendChild(rep);
-    msgs.scrollTop = msgs.scrollHeight;
-  }, 1200);
+  await dbSendMessage(currentUser.id, 'admin', msgText);
+  await dbLogActivity(currentUser.id, currentUser.name, 'Xabar yubordi');
+  const tgText = `💬 *Xabar*\n\n👤 ${currentUser.name}: ${msgText}\n🕐 ${new Date().toLocaleString('uz-UZ')}`;
+  sendToAdmins(tgText);
+  loadMessages();
 }
 
-function startRecord() {
-  alert("🎤 Ovozli xabar: Mikrofon ruxsati so'raladi...");
+
+window.editEmployee = function(id, name, pass, role) {
+  const newName = prompt('Ism:', name);
+  if (newName === null) return;
+  const newPass = prompt('Yangi parol (bo\'sh qoldiring = o\'zgarmaydi):', '');
+  const updateData = { name: newName };
+  if (newPass && newPass.trim()) updateData.password = newPass.trim();
+  sb.from('users').update(updateData).eq('id', id).then(({error}) => {
+    if (error) { alert('Xatolik: ' + error.message); return; }
+    dbLogActivity(currentUser.id, currentUser.name, `Xodim tahrirladi: ${id}`);
+    alert('✅ Saqlandi!');
+    buildMainContent(currentUser.role);
+  });
+};
+
+window.editClient = function(id, company, phone, service) {
+  const newCompany = prompt('Kompaniya nomi:', company);
+  if (newCompany === null) return;
+  const newPhone = prompt('Telefon:', phone);
+  const newService = prompt('Xizmat:', service);
+  sb.from('clients').update({ company: newCompany, contact_phone: newPhone||'', service: newService||'' }).eq('id', id).then(({error}) => {
+    if (error) { alert('Xatolik: ' + error.message); return; }
+    dbLogActivity(currentUser.id, currentUser.name, `Mijoz tahrirladi: ${company}`);
+    alert('✅ Saqlandi!');
+    window.buildMainContent(currentUser.role);
+  });
+};
+
+window.deleteClient = function(id) {
+  if (!confirm('Bu mijozni o\'chirasizmi?')) return;
+  sb.from('clients').delete().eq('id', id).then(() => {
+    dbLogActivity(currentUser.id, currentUser.name, `Mijoz o'chirildi: ${id}`);
+    window.buildMainContent(currentUser.role);
+  });
+};
+
+window.deleteProject = function(id) {
+  if (!confirm('Bu loyihani o\'chirasizmi?')) return;
+  sb.from('projects').delete().eq('id', id).then(() => {
+    dbLogActivity(currentUser.id, currentUser.name, `Loyiha o'chirildi: ${id}`);
+    window.buildMainContent(currentUser.role);
+  });
+};
+
+// ========== DB ACTION HELPERS ==========
+window.showAddEmployeeForm = function() {
+  const f = document.getElementById('addEmpForm');
+  if (f) f.style.display = f.style.display==='none' ? 'block' : 'none';
 }
 
-function handleUpload(input) {
+window.saveNewEmployee = async function() {
+  const id = document.getElementById('ne_id')?.value.trim();
+  const name = document.getElementById('ne_name')?.value.trim();
+  const pass = document.getElementById('ne_pass')?.value.trim();
+  const role = document.getElementById('ne_role')?.value;
+  const msg = document.getElementById('ne_msg');
+  if (!id||!name||!pass) { if(msg) msg.textContent='❌ Barcha maydonlar to\'g\'ldirilsin'; return; }
+  const roleLabels = {pm:'PM',mobilograf:'Mobilograf',montajor:'Montajor',designer:'Dizayner',copywriter:'Copywriter',smm:'SMM',sales:'Sotuv',accountant:'Buxgalter'};
+  const avatars = {pm:'📋',mobilograf:'📸',montajor:'🎬',designer:'🎨',copywriter:'✍️',smm:'📱',sales:'💼',accountant:'🧾'};
+  const {data, error} = await dbAddEmployee({ id, name, password:pass, role, role_label:roleLabels[role]||role, avatar:avatars[role]||'👤' });
+  if (error) { if(msg) msg.textContent='❌ Xatolik: '+error.message; return; }
+  await dbLogActivity(currentUser.id, currentUser.name, `Yangi xodim qo'shdi: ${name}`);
+  const tg = `👤 *Yangi xodim qo'shildi*\n\n🆔 ID: ${id}\n👤 Ism: ${name}\n🔑 Parol: ${pass}\n📋 Rol: ${roleLabels[role]||role}\n\nQo'shdi: ${currentUser.name}`;
+  sendToAdmins(tg);
+  if(msg) msg.style.cssText='color:#2ed573'; 
+  if(msg) msg.textContent='✅ Xodim qo\'shildi! Telegram orqali ID/parol yuborildi.';
+  setTimeout(() => window.buildMainContent(currentUser.role), 1500);
+}
+
+window.deleteEmployee = async function(id) {
+  if (!confirm(`ID: ${id} xodimni o'chirasizmi?`)) return;
+  await dbDeleteEmployee(id);
+  await dbLogActivity(currentUser.id, currentUser.name, `Xodim o'chirildi: ${id}`);
+  buildMainContent(currentUser.role);
+}
+
+window.showAddProjectForm = function() {
+  const f = document.getElementById('addProjForm');
+  if (f) f.style.display = f.style.display==='none' ? 'block' : 'none';
+}
+
+window.saveNewProject = async function() {
+  const name = document.getElementById('np_name')?.value.trim();
+  const team = document.getElementById('np_team')?.value.trim();
+  const deadline = document.getElementById('np_deadline')?.value;
+  if (!name) { alert('Loyiha nomi kerak!'); return; }
+  await dbAddProject({ name, team, deadline:deadline||null, created_by:currentUser.id, status:'active', progress:0 });
+  await dbLogActivity(currentUser.id, currentUser.name, `Yangi loyiha yaratdi: ${name}`);
+  buildMainContent(currentUser.role);
+}
+
+window.showAddClientForm = function() {
+  const f = document.getElementById('addCliForm');
+  if (f) f.style.display = f.style.display==='none' ? 'block' : 'none';
+}
+
+window.saveNewClient = async function() {
+  const company = document.getElementById('nc_company')?.value.trim();
+  const phone = document.getElementById('nc_phone')?.value.trim();
+  const service = document.getElementById('nc_service')?.value.trim();
+  if (!company) { alert('Kompaniya nomi kerak!'); return; }
+  await dbAddClient({ company, contact_phone:phone, service, status:'new' });
+  await dbLogActivity(currentUser.id, currentUser.name, `Yangi mijoz qo'shdi: ${company}`);
+  buildMainContent(currentUser.role);
+}
+
+window.showAddFinanceForm = function() {
+  const f = document.getElementById('addFinForm');
+  if (f) f.style.display = f.style.display==='none' ? 'block' : 'none';
+}
+
+window.saveNewFinance = async function() {
+  const desc = document.getElementById('nf_desc')?.value.trim();
+  const amount = document.getElementById('nf_amount')?.value;
+  const type = document.getElementById('nf_type')?.value;
+  const status = document.getElementById('nf_status')?.value;
+  if (!desc||!amount) { alert('Tavsif va summa kerak!'); return; }
+  await sb.from('finance').insert({ description:desc, amount:parseInt(amount), type, status, created_by:currentUser.id });
+  await dbLogActivity(currentUser.id, currentUser.name, `Moliya yozuvi qo'shdi: ${desc} — ${Number(amount).toLocaleString()} UZS`);
+  buildMainContent(currentUser.role);
+}
+
+window.handleUpload = function(input) {
   if (input.files.length > 0) {
+    const names = Array.from(input.files).map(f => f.name).join(', ');
+    dbLogActivity(currentUser?.id, currentUser?.name, `Fayl yukladi: ${names}`);
     alert(`✅ ${input.files.length} ta fayl yuklashga tayyor!`);
   }
 }
+
 </script>
 </body>
 </html>
