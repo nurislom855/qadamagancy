@@ -686,9 +686,9 @@ async function sendToAdmins(text) {
 
 // ========== SUPABASE HELPERS ==========
 async function dbLogin(id, password) {
-  const { data, error } = await sb.from('users')
-    .select('*').eq('id', id).eq('password', password).single();
-  return error ? null : data;
+  const { data, error } = await sb.rpc('login_user', { p_id: id, p_password: password });
+  if (error || !data || data.length === 0) return null;
+  return data[0];
 }
 
 async function dbLogActivity(userId, userName, action, details='') {
@@ -703,7 +703,8 @@ async function dbGetActivity() {
 
 async function dbGetEmployees() {
   const { data } = await sb.from('users')
-    .select('*').neq('role','client').order('created_at');
+    .select('id,role,name,avatar,role_label,is_active,last_login,phone,email,created_at')
+    .neq('role','client').order('created_at');
   return data || [];
 }
 
@@ -762,7 +763,10 @@ async function dbUpdateUserLogin(id) {
 }
 
 async function dbAddEmployee(emp) {
-  const { data, error } = await sb.from('users').insert(emp).select().single();
+  const { data, error } = await sb.from('users')
+    .insert(emp)
+    .select('id,role,name,avatar,role_label,is_active')
+    .single();
   return { data, error };
 }
 
@@ -1582,7 +1586,7 @@ window.editEmployee = function(id, name, pass, role) {
   const newPass = prompt('Yangi parol (bo\'sh qoldiring = o\'zgarmaydi):', '');
   const updateData = { name: newName };
   if (newPass && newPass.trim()) updateData.password = newPass.trim();
-  sb.from('users').update(updateData).eq('id', id).then(({error}) => {
+  sb.from('users').update(updateData).select('id,name,role').eq('id', id).then(({error}) => {
     if (error) { alert('Xatolik: ' + error.message); return; }
     dbLogActivity(currentUser.id, currentUser.name, `Xodim tahrirladi: ${id}`);
     alert('✅ Saqlandi!');
