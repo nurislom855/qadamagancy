@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qadam Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f0f5;
+    --text2: #9090a8;
+    --accent: #e8ff47;
+    --accent2: #7c3aed;
+    --red: #ff4757;
+    --green: #2ed573;
+    --blue: #3b82f6;
+    --orange: #f59e0b;
+    --card: rgba(255,255,255,0.04);
+    --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  [data-theme="light"] {
+    --bg: #f5f5f0;
+    --bg2: #ebebе5;
+    --bg2: #e8e8e0;
+    --bg3: #ddddd5;
+    --border: rgba(0,0,0,0.1);
+    --text: #0a0a0f;
+    --text2: #555560;
+    --card: rgba(0,0,0,0.04);
+    --shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
+  h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  [data-theme="light"] nav { background: rgba(245,245,240,0.85); }
+  .nav-logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .lang-btns { display: flex; gap: 4px; }
+  .lang-btn { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active, .lang-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+  .theme-toggle { background: var(--card); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.2s; }
+  .theme-toggle:hover { background: var(--accent); color: #000; }
+  .btn-login { background: var(--accent2); color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .btn-login:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 80px 40px 40px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(232,255,71,0.08) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.4;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 800px; animation: fadeUp 1s ease both; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); padding: 6px 16px; border-radius: 100px; font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+  .hero-badge span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  .hero h1 { font-size: clamp(48px, 8vw, 96px); font-weight: 800; line-height: 0.95; letter-spacing: -3px; margin-bottom: 24px; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 18px; color: var(--text2); max-width: 500px; margin: 0 auto 40px; line-height: 1.6; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary { background: var(--accent); color: #000; border: none; padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Syne', sans-serif; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(232,255,71,0.3); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+  .btn-outline:hover { border-color: var(--text2); }
+  .hero-stats { display: flex; gap: 40px; justify-content: center; margin-top: 60px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+  /* SECTIONS */
+  section { padding: 100px 40px; }
+  .section-label { font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .section-title { font-size: clamp(32px, 4vw, 52px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+  .section-sub { font-size: 16px; color: var(--text2); max-width: 500px; line-height: 1.6; }
+  .section-header { margin-bottom: 60px; }
+
+  /* SERVICES */
+  #services { background: var(--bg2); }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .service-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px;
+    transition: all 0.3s; cursor: default; position: relative; overflow: hidden;
+  }
+  .service-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(124,58,237,0.08), transparent); opacity: 0; transition: opacity 0.3s; }
+  .service-card:hover { border-color: var(--accent2); transform: translateY(-4px); }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon { font-size: 36px; margin-bottom: 16px; }
+  .service-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .service-card p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+  /* PORTFOLIO */
+  #portfolio { background: var(--bg); }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .portfolio-card {
+    border-radius: 16px; overflow: hidden; position: relative;
+    aspect-ratio: 4/3; cursor: pointer;
+    background: var(--bg3); border: 1px solid var(--border);
+    transition: transform 0.3s;
+  }
+  .portfolio-card:hover { transform: scale(1.02); }
+  .portfolio-thumb {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .portfolio-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  }
+  .portfolio-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: #fff; }
+  .portfolio-info p { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .portfolio-tag { display: inline-block; background: var(--accent); color: #000; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
+
+  /* NEWS */
+  #news { background: var(--bg2); }
+  .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .news-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all 0.3s; cursor: pointer; }
+  .news-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+  .news-img { height: 180px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  .news-body { padding: 20px; }
+  .news-date { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+  .news-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .news-body p { font-size: 14px; color: var(--text2); line-height: 1.5; }
+
+  /* TEAM */
+  #team { background: var(--bg); }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .team-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 20px; text-align: center; transition: all 0.3s; }
+  .team-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .team-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--bg3); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2px solid var(--border); }
+  .team-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .team-role { font-size: 12px; color: var(--accent); font-weight: 600; }
+
+  /* CONTACT */
+  #contact { background: var(--bg2); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  .contact-info h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  .contact-info p { color: var(--text2); line-height: 1.6; margin-bottom: 32px; }
+  .contact-items { display: flex; flex-direction: column; gap: 16px; }
+  .contact-item { display: flex; align-items: center; gap: 12px; }
+  .contact-icon { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .contact-item span { font-size: 14px; color: var(--text2); }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 12px 16px; border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--accent2); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  /* FOOTER */
+  footer { background: var(--bg); border-top: 1px solid var(--border); padding: 40px; text-align: center; }
+  footer p { color: var(--text2); font-size: 14px; }
+  footer strong { color: var(--accent); }
+
+  /* ========== MODAL / AUTH ========== */
+  .overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+    padding: 40px; width: 100%; max-width: 440px; position: relative;
+    animation: fadeUp 0.3s ease both;
+  }
+  .modal-close { position: absolute; top: 16px; right: 16px; background: var(--card); border: 1px solid var(--border); color: var(--text); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+  .modal h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .modal p.sub { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+  .tab-switcher { display: flex; background: var(--card); border-radius: 10px; padding: 4px; margin-bottom: 24px; }
+  .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text2); border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .tab-btn.active { background: var(--accent2); color: #fff; }
+  .input-group { margin-bottom: 16px; }
+  .input-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+  .input-group input, .input-group select {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+    padding: 12px 14px; border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  .input-group input:focus, .input-group select:focus { border-color: var(--accent2); }
+  .login-types { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .login-type-btn {
+    padding: 12px; border: 2px solid var(--border); border-radius: 10px;
+    background: var(--card); color: var(--text2); cursor: pointer; text-align: center;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .login-type-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,0.05); }
+  .login-type-btn .icon { font-size: 24px; display: block; margin-bottom: 4px; }
+  .login-type-btn span { font-size: 12px; font-weight: 500; }
+  .btn-full { width: 100%; background: var(--accent2); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Syne', sans-serif; margin-top: 8px; }
+  .btn-full:hover { opacity: 0.85; }
+  .alert { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+  .alert-error { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: #ff6b7a; }
+  .alert-success { background: rgba(46,213,115,0.1); border: 1px solid rgba(46,213,115,0.3); color: #2ed573; }
+
+  /* ========== DASHBOARD ========== */
+  .dashboard {
+    display: none; min-height: 100vh;
+    background: var(--bg);
+  }
+  .dashboard.open { display: flex; }
+  .sidebar {
+    width: 260px; min-height: 100vh; background: var(--bg2);
+    border-right: 1px solid var(--border); padding: 24px 16px;
+    display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
+    z-index: 100; overflow-y: auto;
+  }
+  .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; padding: 8px 12px; margin-bottom: 24px; }
+  .sidebar-logo span { color: var(--accent); }
+  .sidebar-user { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 24px; }
+  .sidebar-user .avatar { width: 40px; height: 40px; border-radius: 10px; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 8px; }
+  .sidebar-user .name { font-size: 14px; font-weight: 600; }
+  .sidebar-user .role { font-size: 12px; color: var(--accent); font-weight: 500; }
+  .sidebar-menu { flex: 1; }
+  .menu-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); padding: 0 12px; margin: 16px 0 8px; }
+  .menu-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    color: var(--text2); font-size: 14px; font-weight: 500;
+    transition: all 0.2s; margin-bottom: 2px; border: 1px solid transparent;
+  }
+  .menu-item:hover { background: var(--card); color: var(--text); }
+  .menu-item.active { background: rgba(232,255,71,0.08); border-color: rgba(232,255,71,0.2); color: var(--accent); }
+  .menu-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .sidebar-bottom { margin-top: auto; }
+  .btn-logout { width: 100%; background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.2); color: #ff6b7a; padding: 10px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .btn-logout:hover { background: rgba(255,71,87,0.2); }
+
+  .main-content { margin-left: 260px; flex: 1; padding: 32px; min-height: 100vh; }
+  .page-header { margin-bottom: 28px; }
+  .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+  .page-sub { font-size: 14px; color: var(--text2); margin-top: 4px; }
+
+  /* DASHBOARD PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* STATS CARDS */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .stat-card .s-icon { font-size: 24px; margin-bottom: 10px; }
+  .stat-card .s-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+  .stat-card .s-label { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .stat-card.accent { border-color: var(--accent); background: rgba(232,255,71,0.05); }
+  .stat-card.purple { border-color: var(--accent2); background: rgba(124,58,237,0.05); }
+
+  /* TABLE */
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 20px; }
+  .table-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .table-head h3 { font-size: 15px; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 12px 16px; font-size: 12px; font-weight: 600; color: var(--text2); text-align: left; border-bottom: 1px solid var(--border); letter-spacing: 0.5px; text-transform: uppercase; }
+  td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: rgba(46,213,115,0.15); color: #2ed573; }
+  .badge-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .badge-red { background: rgba(255,71,87,0.15); color: #ff6b7a; }
+  .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .badge-purple { background: rgba(124,58,237,0.15); color: #a78bfa; }
+
+  /* UPLOAD AREA */
+  .upload-area {
+    border: 2px dashed var(--border); border-radius: 14px; padding: 40px;
+    text-align: center; cursor: pointer; transition: all 0.3s;
+    background: var(--card);
+  }
+  .upload-area:hover { border-color: var(--accent2); background: rgba(124,58,237,0.05); }
+  .upload-area .u-icon { font-size: 40px; margin-bottom: 12px; }
+  .upload-area p { color: var(--text2); font-size: 14px; }
+  .upload-area strong { color: var(--text); }
+
+  /* CHAT */
+  .chat-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; display: flex; flex-direction: column; height: 500px; }
+  .chat-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .chat-info .name { font-size: 14px; font-weight: 600; }
+  .chat-info .status { font-size: 11px; color: var(--green); }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 70%; }
+  .msg.mine { align-self: flex-end; }
+  .msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.4; }
+  .msg.mine .msg-bubble { background: var(--accent2); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.other .msg-bubble { background: var(--bg3); color: var(--text); border-bottom-left-radius: 4px; }
+  .msg-time { font-size: 11px; color: var(--text2); margin-top: 4px; text-align: right; }
+  .msg.other .msg-time { text-align: left; }
+  .chat-input-area { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
+  .chat-input { flex: 1; background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; }
+  .chat-action-btn { width: 36px; height: 36px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 16px; color: var(--text2); transition: all 0.2s; }
+  .chat-action-btn:hover { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .chat-send { width: 36px; height: 36px; background: var(--accent2); border: none; border-radius: 8px; cursor: pointer; font-size: 16px; color: #fff; transition: all 0.2s; }
+  .chat-send:hover { opacity: 0.85; }
+
+  /* CONTRACT */
+  .contract-form { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; }
+  .contract-form h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-row.full { grid-template-columns: 1fr; }
+  .contract-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; font-size: 13px; color: var(--text2); line-height: 1.8; }
+  .contract-preview strong { color: var(--text); }
+  .approval-badge { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; }
+  .approval-badge.pending { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; }
+  .approval-badge.approved { background: rgba(46,213,115,0.1); border: 1px solid rgba(46,213,115,0.3); color: #2ed573; }
+
+  /* GROWTH CHART */
+  .chart-area { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+  .chart-area h3 { font-size: 15px; font-weight: 700; margin-bottom: 20px; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .bar { width: 100%; background: linear-gradient(to top, var(--accent2), var(--accent)); border-radius: 6px 6px 0 0; transition: height 0.5s ease; min-height: 4px; }
+  .bar-label { font-size: 11px; color: var(--text2); }
+
+  /* NOTIFICATION DOT */
+  .notif-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; display: inline-block; margin-left: 6px; }
+
+  /* ADMIN SPECIFIC */
+  .role-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .role-admin { background: rgba(255,71,87,0.15); color: #ff6b7a; }
+  .role-pm { background: rgba(124,58,237,0.15); color: #a78bfa; }
+  .role-designer { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .role-mobilograf { background: rgba(46,213,115,0.15); color: #2ed573; }
+  .role-smm { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .role-sales { background: rgba(232,255,71,0.2); color: #c8e800; }
+  .role-accountant { background: rgba(255,255,255,0.1); color: var(--text2); }
+  .role-copywriter { background: rgba(255,150,50,0.15); color: #ff9632; }
+  .role-client { background: rgba(100,200,255,0.15); color: #64c8ff; }
+
+  .action-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; margin-right: 4px; }
+  .action-btn:hover { border-color: var(--accent2); color: var(--accent); }
+  .action-btn.danger:hover { border-color: var(--red); color: var(--red); }
+  .action-btn.success { background: rgba(46,213,115,0.1); border-color: rgba(46,213,115,0.3); color: var(--green); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 12px 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+    .form-row { grid-template-columns: 1fr; }
+    .sidebar { width: 220px; }
+    .main-content { margin-left: 220px; padding: 20px; }
+    .hero h1 { letter-spacing: -2px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== PUBLIC SITE ===== -->
+<div id="publicSite">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Qadam<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#services" data-key="nav_services">Xizmatlar</a></li>
+      <li><a href="#portfolio" data-key="nav_portfolio">Portfolio</a></li>
+      <li><a href="#news" data-key="nav_news">Yangiliklar</a></li>
+      <li><a href="#team" data-key="nav_team">Jamoa</a></li>
+      <li><a href="#contact" data-key="nav_contact">Aloqa</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-btns">
+        <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+        <button class="lang-btn" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="btn-login" onclick="openAuth()" data-key="btn_login">Kirish</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span></span><span data-key="hero_badge">Toshkentdagi yetakchi marketing agentlik</span></div>
+      <h1><em data-key="hero_title1">Biznesingizni</em><br><span data-key="hero_title2">keyingi qadamga</span><br><span data-key="hero_title3">olib chiqamiz</span></h1>
+      <p data-key="hero_sub">Reklama, dizayn, SMM va content marketing orqali brendingizni kuchaytiramiz</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-key="hero_cta1">Biz bilan ishlash</button>
+        <button class="btn-outline" onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})" data-key="hero_cta2">Ishlarimizni ko'rish</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">150+</div><div class="stat-label" data-key="stat1">Mijozlar</div></div>
+        <div class="stat"><div class="stat-num">3+</div><div class="stat-label" data-key="stat2">Yillik tajriba</div></div>
+        <div class="stat"><div class="stat-num">500+</div><div class="stat-label" data-key="stat3">Loyihalar</div></div>
+        <div class="stat"><div class="stat-num">98%</div><div class="stat-label" data-key="stat4">Mamnun mijozlar</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-header">
+      <div class="section-label" data-key="sec_services">Xizmatlar</div>
+      <h2 class="section-title" data-key="services_title">Nima qilamiz?</h2>
+      <p class="section-sub" data-key="services_sub">Biznesingiz uchun to'liq marketing yechimlar</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card"><div class="service-icon">📱</div><h3 data-key="s1">SMM & Kontent</h3><p data-key="s1d">Instagram, Telegram, YouTube uchun professional kontent yaratish va boshqarish</p></div>
+      <div class="service-card"><div class="service-icon">🎬</div><h3 data-key="s2">Video Ishlab Chiqarish</h3><p data-key="s2d">Reklama roli, korporativ video, reels va short-formatdagi kontentlar</p></div>
+      <div class="service-card"><div class="service-icon">🎨</div><h3 data-key="s3">Grafik Dizayn</h3><p data-key="s3d">Logo, brendbook, banner, poligrafiya va barcha dizayn ehtiyojlari</p></div>
+      <div class="service-card"><div class="service-icon">📊</div><h3 data-key="s4">Targetli Reklama</h3><p data-key="s4d">Facebook, Instagram, Google Ads orqali aniq auditoriyaga reklama</p></div>
+      <div class="service-card"><div class="service-icon">✍️</div><h3 data-key="s5">Copywriting</h3><p data-key="s5d">Sotuvchi matnlar, slogans, postlar va sayt uchun kontentlar</p></div>
+      <div class="service-card"><div class="service-icon">🌐</div><h3 data-key="s6">Brend Strategiyasi</h3><p data-key="s6d">Brendingizning pozitsiyalashtirish va marketing strategiyasini ishlab chiqish</p></div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="section-header">
+      <div class="section-label" data-key="sec_portfolio">Portfolio</div>
+      <h2 class="section-title" data-key="port_title">Qilgan ishlarimiz</h2>
+      <p class="section-sub" data-key="port_sub">Eng so'nggi loyihalarimizdan namunalar</p>
+    </div>
+    <div class="portfolio-grid">
+      <div class="portfolio-card"><div class="portfolio-thumb">🍕</div><div class="portfolio-info"><div class="portfolio-tag">SMM</div><h3>Pizza House</h3><p>Instagram +12K followers, 3 oy</p></div></div>
+      <div class="portfolio-card"><div class="portfolio-thumb">💄</div><div class="portfolio-info"><div class="portfolio-tag">Brend</div><h3>Glam Beauty</h3><p>To'liq brendbook va packaging</p></div></div>
+      <div class="portfolio-card"><div class="portfolio-thumb">🏋️</div><div class="portfolio-info"><div class="portfolio-tag">Video</div><h3>FitZone</h3><p>Reklama roli, 500K ko'rishlar</p></div></div>
+      <div class="portfolio-card"><div class="portfolio-thumb">🏠</div><div class="portfolio-info"><div class="portfolio-tag">Target</div><h3>SmartHome</h3><p>ROAS 4.5x, 6 oylik kampaniya</p></div></div>
+      <div class="portfolio-card"><div class="portfolio-thumb">☕</div><div class="portfolio-info"><div class="portfolio-tag">Kontent</div><h3>Aroma Coffee</h3><p>Haftalik kontent plan + dizayn</p></div></div>
+      <div class="portfolio-card"><div class="portfolio-thumb">🚗</div><div class="portfolio-info"><div class="portfolio-tag">Full</div><h3>AutoPro</h3><p>SMM + Video + Target birga</p></div></div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section id="news">
+    <div class="section-header">
+      <div class="section-label" data-key="sec_news">Yangiliklar</div>
+      <h2 class="section-title" data-key="news_title">So'nggi yangiliklar</h2>
+      <p class="section-sub" data-key="news_sub">Marketing dunyosidagi eng so'nggi tendensiyalar</p>
+    </div>
+    <div class="news-grid">
+      <div class="news-card"><div class="news-img">📱</div><div class="news-body"><div class="news-date">12 Yanvar 2025</div><h3 data-key="n1">2025-yilda Instagram algoritmi qanday o'zgaradi?</h3><p data-key="n1d">Yangi yilda kontent strategiyangizni qanday moslashtirish haqida batafsil...</p></div></div>
+      <div class="news-card"><div class="news-img">🎯</div><div class="news-body"><div class="news-date">5 Yanvar 2025</div><h3 data-key="n2">Targetli reklamada yangi imkoniyatlar</h3><p data-key="n2d">Meta va Google reklama platformalarida 2025-yil uchun yangi funksiyalar...</p></div></div>
+      <div class="news-card"><div class="news-img">🏆</div><div class="news-body"><div class="news-date">28 Dekabr 2024</div><h3 data-key="n3">Qadam Agency — 2024 yil natijalari</h3><p data-key="n3d">150+ mijoz, 500+ loyiha — 2024-yilni qanday yakunladik...</p></div></div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="section-header">
+      <div class="section-label" data-key="sec_team">Jamoa</div>
+      <h2 class="section-title" data-key="team_title">Bizning jamoa</h2>
+      <p class="section-sub" data-key="team_sub">Professional va tajribali mutaxassislar</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-avatar">👑</div><h4>Admin</h4><div class="team-role" data-key="r_admin">Rahbar</div></div>
+      <div class="team-card"><div class="team-avatar">📋</div><h4>Proekt Menejer</h4><div class="team-role" data-key="r_pm">Loyiha boshqaruvchisi</div></div>
+      <div class="team-card"><div class="team-avatar">📸</div><h4>Mobilograf</h4><div class="team-role" data-key="r_mob">Video & Foto mutaxassis</div></div>
+      <div class="team-card"><div class="team-avatar">🎨</div><h4>Dizayner</h4><div class="team-role" data-key="r_des">Grafik dizayner</div></div>
+      <div class="team-card"><div class="team-avatar">✍️</div><h4>Copywriter</h4><div class="team-role" data-key="r_copy">Matn muallifi</div></div>
+      <div class="team-card"><div class="team-avatar">📱</div><h4>SMM Menejer</h4><div class="team-role" data-key="r_smm">Ijtimoiy tarmoqlar</div></div>
+      <div class="team-card"><div class="team-avatar">💼</div><h4>Sotuv Menejer</h4><div class="team-role" data-key="r_sales">Savdo bo'limi</div></div>
+      <div class="team-card"><div class="team-avatar">🧾</div><h4>Buxgalter</h4><div class="team-role" data-key="r_acc">Moliyaviy nazorat</div></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header">
+      <div class="section-label" data-key="sec_contact">Aloqa</div>
+      <h2 class="section-title" data-key="contact_title">Biz bilan bog'laning</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3 data-key="c_head">Loyihangizni muhokama qilaylik</h3>
+        <p data-key="c_sub">Biznesingiz uchun eng to'g'ri yechimni topishda yordam beramiz</p>
+        <div class="contact-items">
+          <div class="contact-item"><div class="contact-icon">📍</div><span>Toshkent, Yunusobod tumani</span></div>
+          <div class="contact-item"><div class="contact-icon">📞</div><span>+998 90 123 45 67</span></div>
+          <div class="contact-item"><div class="contact-icon">✉️</div><span>info@qadam.agency</span></div>
+          <div class="contact-item"><div class="contact-icon">🕐</div><span data-key="c_hours">Dushanba–Juma: 9:00–18:00</span></div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <div class="form-group"><input type="text" placeholder="Ismingiz" data-key-ph="ph_name"></div>
+        <div class="form-group"><input type="tel" placeholder="Telefon raqamingiz" data-key-ph="ph_phone"></div>
+        <div class="form-group"><input type="text" placeholder="Kompaniya nomi" data-key-ph="ph_company"></div>
+        <div class="form-group">
+          <select>
+            <option data-key="sel_s">Xizmat tanlang</option>
+            <option data-key="sel_1">SMM & Kontent</option>
+            <option data-key="sel_2">Video Ishlab Chiqarish</option>
+            <option data-key="sel_3">Grafik Dizayn</option>
+            <option data-key="sel_4">Targetli Reklama</option>
+          </select>
+        </div>
+        <div class="form-group"><textarea placeholder="Xabaringiz..." data-key-ph="ph_msg"></textarea></div>
+        <button class="btn-primary" style="width:100%" onclick="alert(T.sent)" data-key="btn_send">Yuborish</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 <strong>Qadam Agency</strong>. <span data-key="footer">Barcha huquqlar himoyalangan.</span></p>
+  </footer>
+</div>
+
+<!-- ===== AUTH MODAL ===== -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <h2 data-key="auth_title">Xush kelibsiz</h2>
+    <p class="sub" data-key="auth_sub">Qadam Agency tizimiga kiring</p>
+
+    <div class="tab-switcher">
+      <button class="tab-btn active" onclick="setTab('login')" data-key="tab_login">Kirish</button>
+      <button class="tab-btn" onclick="setTab('register')" data-key="tab_reg">Ro'yxatdan o'tish</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginPanel">
+      <div class="login-types">
+        <div class="login-type-btn active" onclick="selectLoginType('employee')" id="lt_emp">
+          <span class="icon">👤</span>
+          <span data-key="lt_emp">Xodim</span>
+        </div>
+        <div class="login-type-btn" onclick="selectLoginType('client')" id="lt_cli">
+          <span class="icon">🤝</span>
+          <span data-key="lt_cli">Mijoz</span>
+        </div>
+      </div>
+      <div id="authAlert" class="alert alert-error" style="display:none"></div>
+      <div class="input-group">
+        <label data-key="lbl_id">ID raqam</label>
+        <input type="text" id="loginId" placeholder="QD-001">
+      </div>
+      <div class="input-group">
+        <label data-key="lbl_pass">Parol</label>
+        <input type="password" id="loginPass" placeholder="••••••••">
+      </div>
+      <button class="btn-full" onclick="doLogin()" data-key="btn_enter">Kirish</button>
+      <p style="font-size:12px;color:var(--text2);margin-top:12px;text-align:center" data-key="demo_hint">Demo: admin/admin123 · pm/pm123 · client/client123</p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerPanel" style="display:none">
+      <div id="regAlert" class="alert alert-error" style="display:none"></div>
+      <div class="input-group">
+        <label data-key="lbl_name">To'liq ism</label>
+        <input type="text" id="regName" placeholder="Ism Familiya">
+      </div>
+      <div class="input-group">
+        <label data-key="lbl_company">Kompaniya nomi</label>
+        <input type="text" id="regCompany" placeholder="Kompaniya LLC">
+      </div>
+      <div class="input-group">
+        <label data-key="lbl_phone2">Telefon</label>
+        <input type="tel" id="regPhone" placeholder="+998 90 000 00 00">
+      </div>
+      <div class="input-group">
+        <label data-key="lbl_pass2">Parol</label>
+        <input type="password" id="regPass" placeholder="Parol yarating">
+      </div>
+      <button class="btn-full" onclick="doRegister()" data-key="btn_register">Ro'yxatdan o'tish</button>
+      <p style="font-size:12px;color:var(--text2);margin-top:12px;text-align:center" data-key="reg_note">So'rovingiz ko'rib chiqilgach ID va parol yuboriladi</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="dashboard" id="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">Qadam<span>.</span></div>
+    <div class="sidebar-user">
+      <div class="avatar" id="sideAvatar">👑</div>
+      <div class="name" id="sideName">Admin</div>
+      <div class="role" id="sideRole">Rahbar</div>
+    </div>
+    <div class="sidebar-menu" id="sidebarMenu"></div>
+    <div class="sidebar-bottom">
+      <button class="btn-logout" onclick="doLogout()">🚪 Chiqish</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content" id="mainContent">
+    <!-- Panels injected by JS -->
+  </div>
+</div>
+
+<script>
+// ========== TRANSLATIONS ==========
+const langs = {
+  uz: {
+    nav_services:'Xizmatlar', nav_portfolio:'Portfolio', nav_news:'Yangiliklar', nav_team:'Jamoa', nav_contact:'Aloqa',
+    btn_login:'Kirish', hero_badge:'Toshkentdagi yetakchi marketing agentlik',
+    hero_title1:'Biznesingizni', hero_title2:'keyingi qadamga', hero_title3:"olib chiqamiz",
+    hero_sub:'Reklama, dizayn, SMM va content marketing orqali brendingizni kuchaytiramiz',
+    hero_cta1:'Biz bilan ishlash', hero_cta2:"Ishlarimizni ko'rish",
+    stat1:'Mijozlar', stat2:'Yillik tajriba', stat3:'Loyihalar', stat4:'Mamnun mijozlar',
+    sec_services:'Xizmatlar', services_title:'Nima qilamiz?', services_sub:"Biznesingiz uchun to'liq marketing yechimlar",
+    s1:'SMM & Kontent', s1d:'Instagram, Telegram, YouTube uchun professional kontent',
+    s2:'Video Ishlab Chiqarish', s2d:'Reklama roli, korporativ video va reels',
+    s3:'Grafik Dizayn', s3d:'Logo, brendbook, banner va barcha dizayn ehtiyojlari',
+    s4:'Targetli Reklama', s4d:"Facebook, Instagram, Google Ads orqali aniq auditoriyaga reklama",
+    s5:'Copywriting', s5d:'Sotuvchi matnlar, slogans va postlar',
+    s6:'Brend Strategiyasi', s6d:"Brendingizning pozitsiyalashtirish strategiyasi",
+    sec_portfolio:'Portfolio', port_title:"Qilgan ishlarimiz", port_sub:"Eng so'nggi loyihalarimizdan namunalar",
+    sec_news:'Yangiliklar', news_title:"So'nggi yangiliklar", news_sub:"Marketing dunyosidagi tendensiyalar",
+    n1:"2025-yilda Instagram algoritmi", n1d:"Yangi yilda kontent strategiyangizni qanday moslashtirish...",
+    n2:"Targetli reklamada yangi imkoniyatlar", n2d:"Meta va Google platformalarida yangi funksiyalar...",
+    n3:"Qadam Agency — 2024 yil natijalari", n3d:"150+ mijoz, 500+ loyiha...",
+    sec_team:'Jamoa', team_title:'Bizning jamoa', team_sub:"Professional va tajribali mutaxassislar",
+    r_admin:'Rahbar', r_pm:"Loyiha boshqaruvchisi", r_mob:"Video & Foto mutaxassis",
+    r_des:"Grafik dizayner", r_copy:"Matn muallifi", r_smm:"Ijtimoiy tarmoqlar",
+    r_sales:"Savdo bo'limi", r_acc:"Moliyaviy nazorat",
+    sec_contact:'Aloqa', contact_title:"Biz bilan bog'laning",
+    c_head:"Loyihangizni muhokama qilaylik", c_sub:"Biznesingiz uchun eng to'g'ri yechimni topamiz",
+    c_hours:"Dushanba–Juma: 9:00–18:00",
+    ph_name:'Ismingiz', ph_phone:'Telefon raqamingiz', ph_company:'Kompaniya nomi', ph_msg:'Xabaringiz...',
+    sel_s:'Xizmat tanlang', sel_1:'SMM & Kontent', sel_2:'Video Ishlab Chiqarish', sel_3:'Grafik Dizayn', sel_4:'Targetli Reklama',
+    btn_send:'Yuborish', footer:"Barcha huquqlar himoyalangan.",
+    auth_title:"Xush kelibsiz", auth_sub:"Qadam Agency tizimiga kiring",
+    tab_login:'Kirish', tab_reg:"Ro'yxatdan o'tish",
+    lt_emp:'Xodim', lt_cli:'Mijoz',
+    lbl_id:'ID raqam', lbl_pass:'Parol', btn_enter:'Kirish',
+    demo_hint:'Demo: admin/admin123 · pm/pm123 · client/client123',
+    lbl_name:"To'liq ism", lbl_company:'Kompaniya nomi', lbl_phone2:'Telefon', lbl_pass2:'Parol',
+    btn_register:"Ro'yxatdan o'tish", reg_note:"So'rovingiz ko'rib chiqilgach ID va parol yuboriladi",
+    sent:"Xabaringiz yuborildi! Tez orada bog'lanamiz."
+  },
+  ru: {
+    nav_services:'Услуги', nav_portfolio:'Портфолио', nav_news:'Новости', nav_team:'Команда', nav_contact:'Контакты',
+    btn_login:'Войти', hero_badge:'Ведущее маркетинговое агентство Ташкента',
+    hero_title1:'Поднимем ваш', hero_title2:'бизнес на', hero_title3:"новый уровень",
+    hero_sub:'Реклама, дизайн, SMM и контент-маркетинг для вашего бренда',
+    hero_cta1:'Работать с нами', hero_cta2:'Смотреть работы',
+    stat1:'Клиентов', stat2:'Лет опыта', stat3:'Проектов', stat4:'Довольных клиентов',
+    sec_services:'Услуги', services_title:'Что мы делаем?', services_sub:'Комплексные маркетинговые решения',
+    s1:'SMM & Контент', s1d:'Профессиональный контент для Instagram, Telegram, YouTube',
+    s2:'Видеопроизводство', s2d:'Рекламные ролики, корпоративные видео и reels',
+    s3:'Графический дизайн', s3d:'Логотип, брендбук, баннер и всё для дизайна',
+    s4:'Таргетированная реклама', s4d:'Реклама в Facebook, Instagram, Google Ads',
+    s5:'Копирайтинг', s5d:'Продающие тексты, слоганы и посты',
+    s6:'Бренд-стратегия', s6d:'Позиционирование и маркетинговая стратегия',
+    sec_portfolio:'Портфолио', port_title:'Наши работы', port_sub:'Примеры последних проектов',
+    sec_news:'Новости', news_title:'Последние новости', news_sub:'Тренды в мире маркетинга',
+    n1:'Алгоритм Instagram в 2025', n1d:'Как адаптировать контент-стратегию в новом году...',
+    n2:'Новые возможности таргета', n2d:'Новые функции в Meta и Google Ads...',
+    n3:'Qadam Agency — итоги 2024', n3d:'150+ клиентов, 500+ проектов...',
+    sec_team:'Команда', team_title:'Наша команда', team_sub:'Профессиональные специалисты',
+    r_admin:'Руководитель', r_pm:'Менеджер проектов', r_mob:'Видео & Фото специалист',
+    r_des:'Графический дизайнер', r_copy:'Копирайтер', r_smm:'Соц. сети',
+    r_sales:'Отдел продаж', r_acc:'Финансовый контроль',
+    sec_contact:'Контакты', contact_title:'Свяжитесь с нами',
+    c_head:'Обсудим ваш проект', c_sub:'Поможем найти лучшее решение для вашего бизнеса',
+    c_hours:'Пн–Пт: 9:00–18:00',
+    ph_name:'Ваше имя', ph_phone:'Номер телефона', ph_company:'Название компании', ph_msg:'Ваше сообщение...',
+    sel_s:'Выберите услугу', sel_1:'SMM & Контент', sel_2:'Видеопроизводство', sel_3:'Графический дизайн', sel_4:'Таргет',
+    btn_send:'Отправить', footer:'Все права защищены.',
+    auth_title:'Добро пожаловать', auth_sub:'Войдите в систему Qadam Agency',
+    tab_login:'Войти', tab_reg:'Регистрация',
+    lt_emp:'Сотрудник', lt_cli:'Клиент',
+    lbl_id:'ID номер', lbl_pass:'Пароль', btn_enter:'Войти',
+    demo_hint:'Demo: admin/admin123 · pm/pm123 · client/client123',
+    lbl_name:'Полное имя', lbl_company:'Компания', lbl_phone2:'Телефон', lbl_pass2:'Пароль',
+    btn_register:'Зарегистрироваться', reg_note:'После проверки заявки вам отправят ID и пароль',
+    sent:"Сообщение отправлено! Скоро свяжемся."
+  },
+  en: {
+    nav_services:'Services', nav_portfolio:'Portfolio', nav_news:'News', nav_team:'Team', nav_contact:'Contact',
+    btn_login:'Login', hero_badge:'Leading Marketing Agency in Tashkent',
+    hero_title1:'Take your', hero_title2:'business to the', hero_title3:"next level",
+    hero_sub:'We boost your brand through advertising, design, SMM and content marketing',
+    hero_cta1:'Work with us', hero_cta2:'View our work',
+    stat1:'Clients', stat2:'Years experience', stat3:'Projects', stat4:'Happy clients',
+    sec_services:'Services', services_title:'What we do', services_sub:'Full marketing solutions for your business',
+    s1:'SMM & Content', s1d:'Professional content for Instagram, Telegram, YouTube',
+    s2:'Video Production', s2d:'Ad videos, corporate videos and reels',
+    s3:'Graphic Design', s3d:'Logo, brandbook, banners and all design needs',
+    s4:'Targeted Ads', s4d:'Advertising on Facebook, Instagram, Google Ads',
+    s5:'Copywriting', s5d:'Selling texts, slogans and posts',
+    s6:'Brand Strategy', s6d:'Brand positioning and marketing strategy',
+    sec_portfolio:'Portfolio', port_title:'Our Work', port_sub:'Samples from latest projects',
+    sec_news:'News', news_title:'Latest News', news_sub:'Trends in marketing world',
+    n1:'Instagram Algorithm in 2025', n1d:'How to adapt your content strategy for the new year...',
+    n2:'New opportunities in targeted ads', n2d:'New features in Meta and Google Ads platforms...',
+    n3:'Qadam Agency — 2024 results', n3d:'150+ clients, 500+ projects...',
+    sec_team:'Team', team_title:'Our Team', team_sub:'Professional and experienced specialists',
+    r_admin:'Director', r_pm:'Project Manager', r_mob:'Video & Photo Specialist',
+    r_des:'Graphic Designer', r_copy:'Copywriter', r_smm:'Social Media',
+    r_sales:'Sales Department', r_acc:'Financial Control',
+    sec_contact:'Contact', contact_title:'Get in touch',
+    c_head:"Let's discuss your project", c_sub:'We help find the right solution for your business',
+    c_hours:'Mon–Fri: 9:00–18:00',
+    ph_name:'Your name', ph_phone:'Phone number', ph_company:'Company name', ph_msg:'Your message...',
+    sel_s:'Select service', sel_1:'SMM & Content', sel_2:'Video Production', sel_3:'Graphic Design', sel_4:'Targeted Ads',
+    btn_send:'Send', footer:'All rights reserved.',
+    auth_title:'Welcome', auth_sub:'Sign in to Qadam Agency',
+    tab_login:'Login', tab_reg:'Register',
+    lt_emp:'Employee', lt_cli:'Client',
+    lbl_id:'ID number', lbl_pass:'Password', btn_enter:'Login',
+    demo_hint:'Demo: admin/admin123 · pm/pm123 · client/client123',
+    lbl_name:'Full name', lbl_company:'Company', lbl_phone2:'Phone', lbl_pass2:'Password',
+    btn_register:'Register', reg_note:'ID and password will be sent after review',
+    sent:"Message sent! We'll contact you soon."
+  }
+};
+
+let currentLang = 'uz';
+let T = langs.uz;
+
+function setLang(l) {
+  currentLang = l;
+  T = langs[l];
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.dataset.key;
+    if (T[k]) el.textContent = T[k];
+  });
+  document.querySelectorAll('[data-key-ph]').forEach(el => {
+    const k = el.dataset.keyPh;
+    if (T[k]) el.placeholder = T[k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
+}
+
+function toggleTheme() {
+  const h = document.documentElement;
+  const isDark = h.dataset.theme === 'dark';
+  h.dataset.theme = isDark ? 'light' : 'dark';
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+}
+
+// ========== AUTH ==========
+const users = [
+  { id:'admin', pass:'admin123', type:'employee', role:'admin', name:'Admin', avatar:'👑', roleLabel:'Rahbar' },
+  { id:'pm', pass:'pm123', type:'employee', role:'pm', name:'Proekt Menejer', avatar:'📋', roleLabel:'PM' },
+  { id:'mob', pass:'mob123', type:'employee', role:'mobilograf', name:'Mobilograf', avatar:'📸', roleLabel:'Mobilograf' },
+  { id:'des', pass:'des123', type:'employee', role:'designer', name:'Dizayner', avatar:'🎨', roleLabel:'Dizayner' },
+  { id:'copy', pass:'copy123', type:'employee', role:'copywriter', name:'Copywriter', avatar:'✍️', roleLabel:'Copywriter' },
+  { id:'smm', pass:'smm123', type:'employee', role:'smm', name:'SMM Menejer', avatar:'📱', roleLabel:'SMM' },
+  { id:'sales', pass:'sales123', type:'employee', role:'sales', name:'Sotuv Menejer', avatar:'💼', roleLabel:'Sotuv' },
+  { id:'acc', pass:'acc123', type:'employee', role:'accountant', name:'Buxgalter', avatar:'🧾', roleLabel:'Buxgalter' },
+  { id:'client', pass:'client123', type:'client', role:'client', name:'Mijoz (Aroma Coffee)', avatar:'☕', roleLabel:'Mijoz' },
+];
+
+let currentUser = null;
+let loginType = 'employee';
+
+function openAuth() { document.getElementById('authOverlay').classList.add('open'); }
+function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); }
+function setTab(t) {
+  document.getElementById('loginPanel').style.display = t === 'login' ? 'block' : 'none';
+  document.getElementById('registerPanel').style.display = t === 'register' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', (i===0&&t==='login')||(i===1&&t==='register')));
+}
+function selectLoginType(t) {
+  loginType = t;
+  document.getElementById('lt_emp').classList.toggle('active', t==='employee');
+  document.getElementById('lt_cli').classList.toggle('active', t==='client');
+}
+
+function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const alert = document.getElementById('authAlert');
+  const user = users.find(u => u.id === id && u.pass === pass && u.type === loginType);
+  if (!user) {
+    alert.style.display = 'block';
+    alert.textContent = "ID yoki parol noto'g'ri!";
+    return;
+  }
+  alert.style.display = 'none';
+  currentUser = user;
+  closeAuth();
+  openDashboard(user);
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value;
+  const company = document.getElementById('regCompany').value;
+  const phone = document.getElementById('regPhone').value;
+  const pass = document.getElementById('regPass').value;
+  const a = document.getElementById('regAlert');
+  if (!name || !phone || !pass) { a.style.display='block'; a.textContent="Barcha maydonlarni to'ldiring!"; return; }
+  a.style.display = 'none';
+  a.className = 'alert alert-success';
+  a.style.display = 'block';
+  a.textContent = "✅ So'rovingiz qabul qilindi! Tez orada ID va parol yuboriladi.";
+  setTimeout(closeAuth, 3000);
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('dashboard').classList.remove('open');
+  document.getElementById('publicSite').style.display = 'block';
+}
+
+// ========== DASHBOARD ==========
+function openDashboard(user) {
+  document.getElementById('publicSite').style.display = 'none';
+  const dash = document.getElementById('dashboard');
+  dash.classList.add('open');
+  document.getElementById('sideAvatar').textContent = user.avatar;
+  document.getElementById('sideName').textContent = user.name;
+  document.getElementById('sideRole').textContent = user.roleLabel;
+
+  buildSidebar(user.role);
+  buildMainContent(user.role);
+}
+
+const menusByRole = {
+  admin: [
+    { icon:'🏠', label:'Boshqaruv paneli', panel:'overview' },
+    { icon:'👥', label:'Xodimlar', panel:'employees' },
+    { icon:'🤝', label:'Mijozlar', panel:'clients' },
+    { icon:'📁', label:'Loyihalar', panel:'projects' },
+    { icon:'📄', label:'Shartnomalar', panel:'contracts' },
+    { icon:'📤', label:'Yuklangan fayllar', panel:'uploads' },
+    { icon:'💬', label:'Chatlar', panel:'chats' },
+    { icon:'📰', label:'Yangiliklar', panel:'news_mgmt' },
+    { icon:'🧾', label:'Moliya', panel:'finance' },
+    { icon:'⚙️', label:'Sozlamalar', panel:'settings' },
+  ],
+  pm: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📁', label:'Loyihalar', panel:'projects' },
+    { icon:'📤', label:'Kelib tushgan fayllar', panel:'uploads' },
+    { icon:'💬', label:'Mijozlar bilan chat', panel:'chats' },
+    { icon:'👥', label:'Jamoa', panel:'team_view' },
+  ],
+  mobilograf: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📤', label:'Fayl yuborish', panel:'upload_files' },
+    { icon:'📁', label:'Mening ishlarim', panel:'my_works' },
+  ],
+  designer: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📤', label:'Dizayn yuborish', panel:'upload_files' },
+    { icon:'📁', label:'Mening ishlarim', panel:'my_works' },
+  ],
+  copywriter: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📤', label:'Matn yuborish', panel:'upload_files' },
+    { icon:'📁', label:'Mening ishlarim', panel:'my_works' },
+  ],
+  smm: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📱', label:'Kontent rejasi', panel:'smm_plan' },
+    { icon:'📤', label:'Fayl yuborish', panel:'upload_files' },
+    { icon:'📁', label:'Mening ishlarim', panel:'my_works' },
+  ],
+  sales: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'📄', label:'Shartnoma tuzish', panel:'contracts' },
+    { icon:'🤝', label:'Mijozlar', panel:'clients' },
+    { icon:'📊', label:'Savdo statistikasi', panel:'sales_stats' },
+  ],
+  accountant: [
+    { icon:'🏠', label:'Bosh sahifa', panel:'overview' },
+    { icon:'🧾', label:'Moliya', panel:'finance' },
+    { icon:'📄', label:'Shartnomalar', panel:'contracts' },
+  ],
+  client: [
+    { icon:'🏠', label:'Loyiham', panel:'my_project' },
+    { icon:'📊', label:'Oylik hisobot', panel:'monthly_report' },
+    { icon:'💬', label:'Menejer bilan chat', panel:'chats' },
+  ],
+};
+
+function buildSidebar(role) {
+  const menu = document.getElementById('sidebarMenu');
+  const items = menusByRole[role] || menusByRole.admin;
+  menu.innerHTML = '<div class="menu-label">Menyu</div>';
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'menu-item' + (i===0 ? ' active' : '');
+    div.innerHTML = `<span class="icon">${item.icon}</span>${item.label}`;
+    div.onclick = () => {
+      document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+      div.classList.add('active');
+      showPanel(item.panel);
+    };
+    menu.appendChild(div);
+  });
+}
+
+function buildMainContent(role) {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = getPanels(role);
+  showPanel(menusByRole[role][0].panel);
+}
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('panel_' + name);
+  if (el) el.classList.add('active');
+}
+
+function getPanels(role) {
+  const panels = {};
+
+  // OVERVIEW (all roles)
+  panels.overview = `
+  <div class="page-header"><div class="page-title">Xush kelibsiz, ${currentUser?.name}! 👋</div><div class="page-sub">Bugun: ${new Date().toLocaleDateString('uz-UZ', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div></div>
+  <div class="stats-row">
+    <div class="stat-card accent"><div class="s-icon">📁</div><div class="s-num">12</div><div class="s-label">Faol loyihalar</div></div>
+    <div class="stat-card purple"><div class="s-icon">✅</div><div class="s-num">8</div><div class="s-label">Bugun vazifalari</div></div>
+    <div class="stat-card"><div class="s-icon">💬</div><div class="s-num">3</div><div class="s-label">Yangi xabarlar</div></div>
+    <div class="stat-card"><div class="s-icon">📤</div><div class="s-num">5</div><div class="s-label">Kutayotgan fayllar</div></div>
+  </div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Faol loyihalar</h3></div>
+    <table><thead><tr><th>Loyiha</th><th>Mijoz</th><th>Holat</th><th>Muddat</th></tr></thead>
+    <tbody>
+      <tr><td><b>Aroma Coffee SMM</b></td><td>Aroma Coffee LLC</td><td><span class="badge badge-green">● Faol</span></td><td>2025-03-31</td></tr>
+      <tr><td><b>FitZone Video</b></td><td>FitZone Sport</td><td><span class="badge badge-yellow">● Jarayonda</span></td><td>2025-02-15</td></tr>
+      <tr><td><b>SmartHome Target</b></td><td>SmartHome Pro</td><td><span class="badge badge-blue">● Tayyorlanmoqda</span></td><td>2025-04-01</td></tr>
+    </tbody></table>
+  </div>`;
+
+  // EMPLOYEES (admin)
+  panels.employees = `
+  <div class="page-header"><div class="page-title">Xodimlar boshqaruvi</div><div class="page-sub">Barcha xodimlar va ularning rollari</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Xodimlar ro'yxati</h3><button class="action-btn" onclick="alert('Yangi xodim qo\\'shish')">+ Qo'shish</button></div>
+    <table><thead><tr><th>ID</th><th>Ism</th><th>Rol</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <tbody>
+      <tr><td>pm</td><td>📋 Proekt Menejer</td><td><span class="role-tag role-pm">PM</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>mob</td><td>📸 Mobilograf</td><td><span class="role-tag role-mobilograf">Mobilograf</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>des</td><td>🎨 Dizayner</td><td><span class="role-tag role-designer">Dizayner</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>copy</td><td>✍️ Copywriter</td><td><span class="role-tag role-copywriter">Copywriter</span></td><td><span class="badge badge-yellow">● Ta'tilda</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>smm</td><td>📱 SMM Menejer</td><td><span class="role-tag role-smm">SMM</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>sales</td><td>💼 Sotuv Menejer</td><td><span class="role-tag role-sales">Sotuv</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>acc</td><td>🧾 Buxgalter</td><td><span class="role-tag role-accountant">Buxgalter</span></td><td><span class="badge badge-green">● Faol</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // CLIENTS
+  panels.clients = `
+  <div class="page-header"><div class="page-title">Mijozlar</div><div class="page-sub">Barcha mijozlar va ularning loyihalari</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Mijozlar ro'yxati</h3><button class="action-btn" onclick="alert('Yangi mijoz qo\\'shish')">+ Qo'shish</button></div>
+    <table><thead><tr><th>ID</th><th>Kompaniya</th><th>Kontakt</th><th>Loyihalar</th><th>Holat</th></tr></thead>
+    <tbody>
+      <tr><td>client</td><td>☕ Aroma Coffee LLC</td><td>+998 90 111 22 33</td><td>SMM & Kontent</td><td><span class="badge badge-green">● Faol</span></td></tr>
+      <tr><td>C-002</td><td>🍕 Pizza House</td><td>+998 91 222 33 44</td><td>SMM + Target</td><td><span class="badge badge-green">● Faol</span></td></tr>
+      <tr><td>C-003</td><td>🏋️ FitZone Sport</td><td>+998 93 333 44 55</td><td>Video Ishlab Chiqarish</td><td><span class="badge badge-yellow">● Jarayonda</span></td></tr>
+      <tr><td>C-004</td><td>🏠 SmartHome Pro</td><td>+998 94 444 55 66</td><td>Targetli Reklama</td><td><span class="badge badge-blue">● Yangi</span></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // CONTRACTS
+  panels.contracts = `
+  <div class="page-header"><div class="page-title">Shartnomalar</div><div class="page-sub">Shartnoma tuzish va boshqarish</div></div>
+  <div class="contract-form">
+    <h3>📄 Yangi shartnoma tuzish</h3>
+    <div id="contractApproval" class="approval-badge pending" style="display:none">
+      ⏳ Shartnoma Admin tasdig'ini kutmoqda...
+    </div>
+    <div class="form-row">
+      <div class="input-group"><label>Mijoz kompaniyasi</label><input type="text" id="c_company" placeholder="Kompaniya LLC"></div>
+      <div class="input-group"><label>Mijoz ismi</label><input type="text" id="c_client" placeholder="Ism Familiya"></div>
+    </div>
+    <div class="form-row">
+      <div class="input-group"><label>Xizmat turi</label>
+        <select id="c_service"><option>SMM & Kontent</option><option>Video Ishlab Chiqarish</option><option>Grafik Dizayn</option><option>Targetli Reklama</option><option>To'liq paket</option></select>
+      </div>
+      <div class="input-group"><label>Shartnoma summasi (UZS)</label><input type="number" id="c_amount" placeholder="5 000 000"></div>
+    </div>
+    <div class="form-row">
+      <div class="input-group"><label>Boshlanish sanasi</label><input type="date" id="c_start"></div>
+      <div class="input-group"><label>Tugash sanasi</label><input type="date" id="c_end"></div>
+    </div>
+    <div class="form-row full">
+      <div class="input-group"><label>Shartnoma shartlari</label><textarea id="c_terms" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-family:DM Sans,sans-serif;resize:vertical;min-height:80px" placeholder="Qo'shimcha shartlar..."></textarea></div>
+    </div>
+    <div class="contract-preview" id="contractPreview">
+      <strong>SHARTNOMA NAMUNASI</strong><br><br>
+      Ushbu shartnoma Qadam Agency va <strong>[Mijoz kompaniyasi]</strong> o'rtasida tuziladi.<br>
+      Xizmat: <strong>[Xizmat turi]</strong><br>
+      Summa: <strong>[Summa]</strong> UZS<br>
+      Muddat: <strong>[Sana]</strong> dan <strong>[Sana]</strong> gacha<br><br>
+      <em>⚠️ Shartnoma Admin (Rahbar) tomonidan tasdiqlanguncha kuchga kirmaydi.</em>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="submitContract()">📤 Tasdiqlashga yuborish</button>
+      ${currentUser?.role === 'admin' ? '<button class="action-btn success" onclick="approveContract()">✅ Tasdiqlash (Admin)</button>' : ''}
+    </div>
+  </div>
+  <div class="table-wrap" style="margin-top:20px">
+    <div class="table-head"><h3>Shartnomalar tarixi</h3></div>
+    <table><thead><tr><th>№</th><th>Mijoz</th><th>Xizmat</th><th>Summa</th><th>Holat</th><th>Sana</th></tr></thead>
+    <tbody>
+      <tr><td>QD-001</td><td>Aroma Coffee</td><td>SMM & Kontent</td><td>8 000 000</td><td><span class="badge badge-green">✅ Tasdiqlangan</span></td><td>2025-01-10</td></tr>
+      <tr><td>QD-002</td><td>FitZone Sport</td><td>Video</td><td>15 000 000</td><td><span class="badge badge-green">✅ Tasdiqlangan</span></td><td>2025-01-15</td></tr>
+      <tr><td>QD-003</td><td>SmartHome Pro</td><td>Target</td><td>6 000 000</td><td><span class="badge badge-yellow">⏳ Kutilmoqda</span></td><td>2025-01-20</td></tr>
+    </tbody></table>
+  </div>`;
+
+  // UPLOAD FILES
+  panels.upload_files = `
+  <div class="page-header"><div class="page-title">Fayl yuborish</div><div class="page-sub">Proekt menejerga ishlaringizni yuboring</div></div>
+  <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+    <div class="u-icon">📁</div>
+    <p><strong>Fayllarni bu yerga tashlang</strong> yoki bosing</p>
+    <p style="margin-top:8px;font-size:12px">Video, rasm, PDF, Figma fayllar qabul qilinadi</p>
+    <input type="file" id="fileInput" style="display:none" multiple onchange="handleUpload(this)">
+  </div>
+  <div style="margin-top:16px">
+    <div class="input-group"><label>Loyiha</label><select style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-family:DM Sans,sans-serif"><option>Aroma Coffee SMM</option><option>FitZone Video</option><option>SmartHome Target</option></select></div>
+    <div class="input-group" style="margin-top:12px"><label>Izoh</label><textarea style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-family:DM Sans,sans-serif;resize:vertical;min-height:80px" placeholder="Fayl haqida qisqacha..."></textarea></div>
+    <button class="btn-primary" style="margin-top:12px" onclick="alert('Fayl muvaffaqiyatli yuborildi! ✅')">📤 Yuborish</button>
+  </div>
+  <div class="table-wrap" style="margin-top:24px">
+    <div class="table-head"><h3>Yuborilgan fayllar</h3></div>
+    <table><thead><tr><th>Fayl</th><th>Loyiha</th><th>Holat</th><th>Sana</th></tr></thead>
+    <tbody>
+      <tr><td>📹 reklama_video_v1.mp4</td><td>FitZone Video</td><td><span class="badge badge-green">✅ Qabul qilindi</span></td><td>Bugun</td></tr>
+      <tr><td>🖼️ banner_design.png</td><td>Aroma Coffee</td><td><span class="badge badge-yellow">⏳ Ko'rib chiqilmoqda</span></td><td>Kecha</td></tr>
+    </tbody></table>
+  </div>`;
+
+  panels.my_works = panels.upload_files;
+
+  // CHAT
+  panels.chats = `
+  <div class="page-header"><div class="page-title">Chatlar</div><div class="page-sub">Xabarlar va muhokamalar</div></div>
+  <div class="chat-wrap">
+    <div class="chat-header">
+      <div class="chat-avatar">${currentUser?.role === 'client' ? '📋' : '🤝'}</div>
+      <div class="chat-info">
+        <div class="name">${currentUser?.role === 'client' ? 'Proekt Menejer' : 'Aroma Coffee (Mijoz)'}</div>
+        <div class="status">● Onlayn</div>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg other"><div class="msg-bubble">Salom! Loyiha bo'yicha yangilik bor. Fevral oyining kontent rejasi tayyor ✅</div><div class="msg-time">10:30</div></div>
+      <div class="msg mine"><div class="msg-bubble">Ajoyib! Qachon boshlaymiz?</div><div class="msg-time">10:32</div></div>
+      <div class="msg other"><div class="msg-bubble">Dushanba kuni birinchi postlar chiqadi. Siz ruxsat bering.</div><div class="msg-time">10:33</div></div>
+    </div>
+    <div class="chat-input-area">
+      <button class="chat-action-btn" onclick="alert('Fayl yuklash')">📎</button>
+      <button class="chat-action-btn" onclick="alert('Rasm yuklash')">🖼️</button>
+      <button class="chat-action-btn" onclick="startRecord()">🎤</button>
+      <input class="chat-input" id="chatInput" placeholder="Xabar yozing..." onkeypress="if(event.key==='Enter')sendMsg()">
+      <button class="chat-send" onclick="sendMsg()">➤</button>
+    </div>
+  </div>`;
+
+  // CLIENT: MY PROJECT
+  panels.my_project = `
+  <div class="page-header"><div class="page-title">Mening loyiham ☕</div><div class="page-sub">Aroma Coffee — SMM & Kontent loyihasi</div></div>
+  <div class="stats-row">
+    <div class="stat-card accent"><div class="s-icon">👥</div><div class="s-num">+2.4K</div><div class="s-label">Yangi obunachilar (oy)</div></div>
+    <div class="stat-card purple"><div class="s-icon">📊</div><div class="s-num">18.5%</div><div class="s-label">Engagement Rate</div></div>
+    <div class="stat-card"><div class="s-icon">📸</div><div class="s-num">24</div><div class="s-label">Chiqarilgan postlar</div></div>
+    <div class="stat-card"><div class="s-icon">👁️</div><div class="s-num">145K</div><div class="s-label">Umumiy ko'rishlar</div></div>
+  </div>
+  <div class="chart-area">
+    <h3>📈 Oylik o'sish dinamikasi</h3>
+    <div class="bar-chart">
+      ${['Avg','Okt','Noy','Dek','Yan','Fev'].map((m,i)=>{const h=[20,35,45,60,80,95][i];return`<div class="bar-col"><div class="bar" style="height:${h}%"></div><div class="bar-label">${m}</div></div>`}).join('')}
+    </div>
+  </div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>So'nggi ishlar</h3></div>
+    <table><thead><tr><th>Kontent</th><th>Tur</th><th>Ko'rishlar</th><th>Like</th><th>Holat</th></tr></thead>
+    <tbody>
+      <tr><td>☕ Yangi menyu taqdimoti</td><td>Reel</td><td>24.5K</td><td>1.2K</td><td><span class="badge badge-green">✅ Chiqarildi</span></td></tr>
+      <tr><td>🎁 Aktsiya e'loni</td><td>Post</td><td>8.3K</td><td>456</td><td><span class="badge badge-green">✅ Chiqarildi</span></td></tr>
+      <tr><td>☀️ Ertalabki kontent</td><td>Story</td><td>5.1K</td><td>—</td><td><span class="badge badge-yellow">⏳ Tayyorlanmoqda</span></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // MONTHLY REPORT
+  panels.monthly_report = `
+  <div class="page-header"><div class="page-title">Oylik hisobotlar</div><div class="page-sub">Har oy qilingan ishlar va natijalar</div></div>
+  ${['Yanvar 2025','Dekabr 2024','Noyabr 2024'].map((m,i)=>`
+  <div class="table-wrap" style="margin-bottom:16px">
+    <div class="table-head"><h3>📅 ${m}</h3><button class="action-btn" onclick="alert('PDF yuklab olish')">⬇️ PDF</button></div>
+    <table><thead><tr><th>Ko'rsatkich</th><th>Rejalashtirilgan</th><th>Bajarildi</th><th>Natija</th></tr></thead>
+    <tbody>
+      <tr><td>Postlar soni</td><td>20</td><td>${[22,18,20][i]}</td><td><span class="badge badge-green">+${[10,0,0][i]}%</span></td></tr>
+      <tr><td>Reels</td><td>4</td><td>${[5,4,3][i]}</td><td><span class="badge badge-${['green','green','yellow'][i]}">${['+25%','100%','-25%'][i]}</span></td></tr>
+      <tr><td>Yangi obunachilar</td><td>1000</td><td>${[2400,1800,1200][i]}</td><td><span class="badge badge-green">+${[140,80,20][i]}%</span></td></tr>
+    </tbody></table>
+  </div>`).join('')}`;
+
+  // SMM PLAN
+  panels.smm_plan = `
+  <div class="page-header"><div class="page-title">SMM Kontent Rejasi</div><div class="page-sub">Fevral 2025</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Kontent taqvimi</h3><button class="action-btn" onclick="alert('Yangi kontent qo\\'shish')">+ Qo'shish</button></div>
+    <table><thead><tr><th>Sana</th><th>Loyiha</th><th>Kontent turi</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <tbody>
+      <tr><td>03 Fev</td><td>Aroma Coffee</td><td>📸 Post</td><td><span class="badge badge-green">✅ Tayyor</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
+      <tr><td>05 Fev</td><td>Pizza House</td><td>🎬 Reel</td><td><span class="badge badge-yellow">⏳ Jarayonda</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
+      <tr><td>07 Fev</td><td>Aroma Coffee</td><td>📖 Story</td><td><span class="badge badge-red">❌ Kechikmoqda</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // FINANCE
+  panels.finance = `
+  <div class="page-header"><div class="page-title">Moliyaviy nazorat</div></div>
+  <div class="stats-row">
+    <div class="stat-card accent"><div class="s-icon">💰</div><div class="s-num">84M</div><div class="s-label">Yanvar daromadi (UZS)</div></div>
+    <div class="stat-card"><div class="s-icon">📤</div><div class="s-num">32M</div><div class="s-label">Xarajatlar</div></div>
+    <div class="stat-card purple"><div class="s-icon">📈</div><div class="s-num">52M</div><div class="s-label">Foyda</div></div>
+    <div class="stat-card"><div class="s-icon">⏳</div><div class="s-num">18M</div><div class="s-label">Kutilayotgan to'lovlar</div></div>
+  </div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>To'lovlar tarixi</h3></div>
+    <table><thead><tr><th>Sana</th><th>Mijoz</th><th>Summa</th><th>Holat</th></tr></thead>
+    <tbody>
+      <tr><td>2025-01-25</td><td>Aroma Coffee</td><td>8 000 000</td><td><span class="badge badge-green">✅ To'langan</span></td></tr>
+      <tr><td>2025-01-20</td><td>FitZone Sport</td><td>15 000 000</td><td><span class="badge badge-green">✅ To'langan</span></td></tr>
+      <tr><td>2025-01-28</td><td>SmartHome Pro</td><td>6 000 000</td><td><span class="badge badge-yellow">⏳ Kutilmoqda</span></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // PROJECTS
+  panels.projects = `
+  <div class="page-header"><div class="page-title">Loyihalar</div><div class="page-sub">Barcha faol va tugallangan loyihalar</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Loyihalar</h3><button class="action-btn">+ Yangi loyiha</button></div>
+    <table><thead><tr><th>Loyiha</th><th>Mijoz</th><th>Jamoa</th><th>Progress</th><th>Holat</th></tr></thead>
+    <tbody>
+      <tr><td><b>Aroma Coffee SMM</b></td><td>Aroma Coffee</td><td>SMM, Dizayner, Copy</td><td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--accent);height:100%;width:75%"></div></div></td><td><span class="badge badge-green">● Faol</span></td></tr>
+      <tr><td><b>FitZone Video</b></td><td>FitZone Sport</td><td>Mobilograf, Dizayner</td><td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--accent2);height:100%;width:45%"></div></div></td><td><span class="badge badge-yellow">● Jarayonda</span></td></tr>
+      <tr><td><b>SmartHome Target</b></td><td>SmartHome Pro</td><td>SMM, Copy</td><td><div style="background:var(--bg3);border-radius:4px;height:6px;width:100%;overflow:hidden"><div style="background:var(--blue);height:100%;width:15%"></div></div></td><td><span class="badge badge-blue">● Boshlandi</span></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // UPLOADS (admin/pm view)
+  panels.uploads = `
+  <div class="page-header"><div class="page-title">Kelib tushgan fayllar</div><div class="page-sub">Xodimlar tomonidan yuborilgan materiallar</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Fayllar</h3></div>
+    <table><thead><tr><th>Fayl</th><th>Yuboruvchi</th><th>Loyiha</th><th>Tur</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <tbody>
+      <tr><td>📹 fitzone_reklama_v2.mp4</td><td>📸 Mobilograf</td><td>FitZone Video</td><td>Video</td><td><span class="badge badge-yellow">⏳ Ko'rib chiqilmoqda</span></td><td><button class="action-btn success" onclick="alert('Qabul qilindi!')">✅ Qabul</button><button class="action-btn danger" onclick="alert('Rad etildi')">❌ Rad</button></td></tr>
+      <tr><td>🖼️ aroma_banner_jan.png</td><td>🎨 Dizayner</td><td>Aroma Coffee</td><td>Rasm</td><td><span class="badge badge-green">✅ Qabul qilindi</span></td><td><button class="action-btn">Ko'rish</button></td></tr>
+      <tr><td>📝 smarthome_post_texts.docx</td><td>✍️ Copywriter</td><td>SmartHome</td><td>Hujjat</td><td><span class="badge badge-yellow">⏳ Ko'rib chiqilmoqda</span></td><td><button class="action-btn success" onclick="alert('Qabul qilindi!')">✅ Qabul</button><button class="action-btn danger">❌ Rad</button></td></tr>
+    </tbody></table>
+  </div>`;
+
+  // SETTINGS
+  panels.settings = `
+  <div class="page-header"><div class="page-title">Sozlamalar</div></div>
+  <div class="contract-form">
+    <h3>⚙️ Tizim sozlamalari</h3>
+    <div class="form-row">
+      <div class="input-group"><label>Agency nomi</label><input type="text" value="Qadam Agency"></div>
+      <div class="input-group"><label>Telefon</label><input type="text" value="+998 90 123 45 67"></div>
+    </div>
+    <div class="form-row">
+      <div class="input-group"><label>Email</label><input type="email" value="info@qadam.agency"></div>
+      <div class="input-group"><label>Manzil</label><input type="text" value="Toshkent, Yunusobod"></div>
+    </div>
+    <button class="btn-primary" onclick="alert('Saqlandi ✅')">💾 Saqlash</button>
+  </div>`;
+
+  panels.news_mgmt = `
+  <div class="page-header"><div class="page-title">Yangiliklar boshqaruvi</div></div>
+  <div class="table-wrap">
+    <div class="table-head"><h3>Yangiliklar</h3><button class="action-btn">+ Yangi post</button></div>
+    <table><thead><tr><th>Sarlavha</th><th>Sana</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <tbody>
+      <tr><td>2025-yilda Instagram algoritmi</td><td>12 Yan 2025</td><td><span class="badge badge-green">✅ Chiqarilgan</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+      <tr><td>Targetli reklamada yangi imkoniyatlar</td><td>5 Yan 2025</td><td><span class="badge badge-green">✅ Chiqarilgan</span></td><td><button class="action-btn">Tahrirlash</button><button class="action-btn danger">O'chirish</button></td></tr>
+    </tbody></table>
+  </div>`;
+
+  panels.team_view = panels.employees;
+  panels.sales_stats = panels.finance;
+
+  let html = '';
+  for (const [key, val] of Object.entries(panels)) {
+    html += `<div class="panel" id="panel_${key}">${val}</div>`;
+  }
+  return html;
+}
+
+// CONTRACT
+function submitContract() {
+  const comp = document.getElementById('c_company')?.value;
+  const svc = document.getElementById('c_service')?.value;
+  const amt = document.getElementById('c_amount')?.value;
+  if (!comp || !amt) { alert("Barcha maydonlarni to'ldiring!"); return; }
+  const preview = document.getElementById('contractPreview');
+  if (preview) {
+    const start = document.getElementById('c_start')?.value || '???';
+    const end = document.getElementById('c_end')?.value || '???';
+    preview.innerHTML = `<strong>SHARTNOMA NAMUNASI</strong><br><br>
+    Ushbu shartnoma Qadam Agency va <strong>${comp}</strong> o'rtasida tuziladi.<br>
+    Xizmat: <strong>${svc}</strong><br>
+    Summa: <strong>${Number(amt).toLocaleString()}</strong> UZS<br>
+    Muddat: <strong>${start}</strong> dan <strong>${end}</strong> gacha<br><br>
+    <em>⚠️ Shartnoma Admin (Rahbar) tomonidan tasdiqlanguncha kuchga kirmaydi.</em>`;
+  }
+  const a = document.getElementById('contractApproval');
+  if (a) { a.style.display='flex'; a.className='approval-badge pending'; a.textContent='⏳ Shartnoma Admin tasdig\'ini kutmoqda...'; }
+  alert("✅ Shartnoma Admin tasdig'iga yuborildi!");
+}
+
+function approveContract() {
+  const a = document.getElementById('contractApproval');
+  if (a) { a.style.display='flex'; a.className='approval-badge approved'; a.textContent='✅ Admin tomonidan tasdiqlandi! Shartnoma kuchga kirdi.'; }
+  alert("✅ Shartnoma tasdiqlandi va imzolandi!");
+}
+
+// CHAT
+function sendMsg() {
+  const input = document.getElementById('chatInput');
+  if (!input?.value.trim()) return;
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg mine';
+  div.innerHTML = `<div class="msg-bubble">${input.value}</div><div class="msg-time">${new Date().toLocaleTimeString('uz',{hour:'2-digit',minute:'2-digit'})}</div>`;
+  msgs.appendChild(div);
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    const rep = document.createElement('div');
+    rep.className = 'msg other';
+    rep.innerHTML = `<div class="msg-bubble">Tushundim! Tez orada javob beraman ✅</div><div class="msg-time">${new Date().toLocaleTimeString('uz',{hour:'2-digit',minute:'2-digit'})}</div>`;
+    msgs.appendChild(rep);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200);
+}
+
+function startRecord() {
+  alert("🎤 Ovozli xabar: Mikrofon ruxsati so'raladi...");
+}
+
+function handleUpload(input) {
+  if (input.files.length > 0) {
+    alert(`✅ ${input.files.length} ta fayl yuklashga tayyor!`);
+  }
+}
+</script>
+</body>
+</html>
