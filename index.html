@@ -666,6 +666,35 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
+// ========== GLOBAL ALIASES (for inline onclick) ==========
+function doLogin() { window.doLogin && window.doLogin(); }
+function doLogout() { window.doLogout && window.doLogout(); }
+function openAuth() { window.openAuth && window.openAuth(); }
+function closeAuth() { window.closeAuth && window.closeAuth(); }
+function toggleTheme() { window.toggleTheme && window.toggleTheme(); }
+function setLang(l) { window.setLang && window.setLang(l); }
+function selectLoginType(t) { window.selectLoginType && window.selectLoginType(t); }
+function setTab(t) { window.setTab && window.setTab(t); }
+function sendMsg() { window.sendMsg && window.sendMsg(); }
+function sendContactMessage() { window.sendContactMessage && window.sendContactMessage(); }
+function handleUpload(i) { window.handleUpload && window.handleUpload(i); }
+function submitContract() { window.submitContract && window.submitContract(); }
+function approveContractById(id) { window.approveContractById && window.approveContractById(id); }
+function showAddEmployeeForm() { window.showAddEmployeeForm && window.showAddEmployeeForm(); }
+function saveNewEmployee() { window.saveNewEmployee && window.saveNewEmployee(); }
+function deleteEmployee(id) { window.deleteEmployee && window.deleteEmployee(id); }
+function editEmployee(id,n,p,r) { window.editEmployee && window.editEmployee(id,n,p,r); }
+function showAddClientForm() { window.showAddClientForm && window.showAddClientForm(); }
+function saveNewClient() { window.saveNewClient && window.saveNewClient(); }
+function editClient(id,c,p,s) { window.editClient && window.editClient(id,c,p,s); }
+function deleteClient(id) { window.deleteClient && window.deleteClient(id); }
+function showAddProjectForm() { window.showAddProjectForm && window.showAddProjectForm(); }
+function saveNewProject() { window.saveNewProject && window.saveNewProject(); }
+function deleteProject(id) { window.deleteProject && window.deleteProject(id); }
+function showAddFinanceForm() { window.showAddFinanceForm && window.showAddFinanceForm(); }
+function saveNewFinance() { window.saveNewFinance && window.saveNewFinance(); }
+
 // ========== CONFIG ==========
 const BOT_TOKEN = '8935783052:AAGKyppUvqBDB-WPCJhxEm0Yk_LuKLng-y8';
 const ADMIN_CHAT_IDS = ['7406325328', '5447737735'];
