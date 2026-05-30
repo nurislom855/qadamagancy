@@ -721,7 +721,7 @@ async function dbLogin(id, password) {
 }
 
 async function dbLogActivity(userId, userName, action, details='') {
-  await sb.from('activity_log').insert({ user_id: userId, user_name: userName, action, details }).catch(()=>{});
+  try { await sb.from('activity_log').insert({ user_id: userId, user_name: userName, action, details }); } catch(e) {}
 }
 
 async function dbGetActivity() {
@@ -784,11 +784,11 @@ async function dbApproveContract(id) {
 }
 
 async function dbSaveContactMessage(msg) {
-  await sb.from('contact_messages').insert(msg).catch(()=>{});
+  try { await sb.from('contact_messages').insert(msg); } catch(e) {}
 }
 
 async function dbUpdateUserLogin(id) {
-  await sb.from('users').update({ last_login: new Date().toISOString() }).eq('id', id).catch(()=>{});
+  try { await sb.from('users').update({ last_login: new Date().toISOString() }).eq('id', id); } catch(e) {}
 }
 
 async function dbAddEmployee(emp) {
@@ -1609,48 +1609,53 @@ window.sendMsg = async function() {
 }
 
 
-window.editEmployee = function(id, name, pass, role) {
+window.editEmployee = async function(id, name, pass, role) {
   const newName = prompt('Ism:', name);
   if (newName === null) return;
   const newPass = prompt('Yangi parol (bo\'sh qoldiring = o\'zgarmaydi):', '');
   const updateData = { name: newName };
   if (newPass && newPass.trim()) updateData.password = newPass.trim();
-  sb.from('users').update(updateData).select('id,name,role').eq('id', id).then(({error}) => {
+  try {
+    const { error } = await sb.from('users').update(updateData).eq('id', id);
     if (error) { alert('Xatolik: ' + error.message); return; }
-    dbLogActivity(currentUser.id, currentUser.name, `Xodim tahrirladi: ${id}`);
+    await dbLogActivity(currentUser.id, currentUser.name, 'Xodim tahrirladi: ' + id);
     alert('✅ Saqlandi!');
-    buildMainContent(currentUser.role);
-  });
+    window.buildMainContent(currentUser.role);
+  } catch(e) { alert('Xatolik: ' + e); }
 };
 
-window.editClient = function(id, company, phone, service) {
+window.editClient = async function(id, company, phone, service) {
   const newCompany = prompt('Kompaniya nomi:', company);
   if (newCompany === null) return;
   const newPhone = prompt('Telefon:', phone);
   const newService = prompt('Xizmat:', service);
-  sb.from('clients').update({ company: newCompany, contact_phone: newPhone||'', service: newService||'' }).eq('id', id).then(({error}) => {
+  try {
+    const { error } = await sb.from('clients').update({ company: newCompany, contact_phone: newPhone||'', service: newService||'' }).eq('id', id);
     if (error) { alert('Xatolik: ' + error.message); return; }
-    dbLogActivity(currentUser.id, currentUser.name, `Mijoz tahrirladi: ${company}`);
+    await dbLogActivity(currentUser.id, currentUser.name, 'Mijoz tahrirladi: ' + company);
     alert('✅ Saqlandi!');
     window.buildMainContent(currentUser.role);
-  });
+  } catch(e) { alert('Xatolik: ' + e); }
 };
 
-window.deleteClient = function(id) {
+window.deleteClient = async function(id) {
   if (!confirm('Bu mijozni o\'chirasizmi?')) return;
-  sb.from('clients').delete().eq('id', id).then(() => {
-    dbLogActivity(currentUser.id, currentUser.name, `Mijoz o'chirildi: ${id}`);
+  try {
+    await sb.from('clients').delete().eq('id', id);
+    await dbLogActivity(currentUser.id, currentUser.name, "Mijoz o'chirildi: " + id);
     window.buildMainContent(currentUser.role);
-  });
+  } catch(e) { alert('Xatolik: ' + e); }
 };
 
-window.deleteProject = function(id) {
+window.deleteProject = async function(id) {
   if (!confirm('Bu loyihani o\'chirasizmi?')) return;
-  sb.from('projects').delete().eq('id', id).then(() => {
-    dbLogActivity(currentUser.id, currentUser.name, `Loyiha o'chirildi: ${id}`);
+  try {
+    await sb.from('projects').delete().eq('id', id);
+    await dbLogActivity(currentUser.id, currentUser.name, "Loyiha o'chirildi: " + id);
     window.buildMainContent(currentUser.role);
-  });
+  } catch(e) { alert('Xatolik: ' + e); }
 };
+
 
 // ========== DB ACTION HELPERS ==========
 window.showAddEmployeeForm = function() {
