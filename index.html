@@ -700,7 +700,7 @@ const BOT_TOKEN = '8935783052:AAGKyppUvqBDB-WPCJhxEm0Yk_LuKLng-y8';
 const ADMIN_CHAT_IDS = ['7406325328', '5447737735'];
 
 const SUPABASE_URL = 'https://lsbbmaseupdulrvzdmpi.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_EKC2el9snlJiBiLxzn12dQ_qctMdKcH';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzYmJtYXNldXBkdWxydnpkbXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNTA5NTYsImV4cCI6MjA5NTcyNjk1Nn0.N2Q7EcC5E70hDSJhJH22mMGQjEaJRQdiRyehqsXF7iI';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function sendToAdmins(text) {
@@ -1037,7 +1037,15 @@ window.doLogin = async function() {
   btn.textContent = '⏳ Tekshirilmoqda...';
   btn.disabled = true;
 
-  const user = await dbLogin(id, pass);
+  console.log('LOGIN START:', id, 'sb ready:', typeof sb);
+  let user = null;
+  try {
+    const result = await sb.rpc('login_user', { p_id: id, p_password: pass });
+    console.log('RPC result:', JSON.stringify(result));
+    user = (result.data && result.data.length > 0) ? result.data[0] : null;
+  } catch(e) {
+    console.error('RPC error:', e);
+  }
   btn.textContent = 'Kirish';
   btn.disabled = false;
 
