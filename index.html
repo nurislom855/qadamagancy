@@ -621,7 +621,7 @@
         <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
       </div>
       <button class="btn-full" onclick="doLogin()" data-key="btn_enter">Kirish</button>
-      <p style="font-size:11px;color:var(--text2);margin-top:12px;text-align:center">Demo: admin/admin123 · pm/pm123 · mob/mob123 · mont/mont123 · client/client123</p>
+
     </div>
 
     <!-- REGISTER — Telegram botga yo'naltirish -->
@@ -1033,19 +1033,22 @@ window.doLogin = async function() {
   const alertEl = document.getElementById('authAlert');
   const btn = document.querySelector('#loginPanel .btn-full');
 
+  if (!id || !pass) {
+    alertEl.style.display = 'block';
+    alertEl.textContent = '⚠️ ID va parolni kiriting!';
+    return;
+  }
+
   alertEl.style.display = 'none';
   btn.textContent = '⏳ Tekshirilmoqda...';
   btn.disabled = true;
 
-  console.log('LOGIN START:', id, 'sb ready:', typeof sb);
   let user = null;
   try {
-    const result = await sb.rpc('login_user', { p_id: id, p_password: pass });
-    console.log('RPC result:', JSON.stringify(result));
-    user = (result.data && result.data.length > 0) ? result.data[0] : null;
-  } catch(e) {
-    console.error('RPC error:', e);
-  }
+    const { data, error } = await sb.rpc('login_user', { p_id: id, p_password: pass });
+    if (!error && data && data.length > 0) user = data[0];
+  } catch(e) {}
+
   btn.textContent = 'Kirish';
   btn.disabled = false;
 
@@ -1063,8 +1066,8 @@ window.doLogin = async function() {
     roleLabel: user.role_label || user.role
   };
 
-  await dbUpdateUserLogin(user.id);
-  await dbLogActivity(user.id, user.name, 'Tizimga kirdi');
+  try { await dbUpdateUserLogin(user.id); } catch(e) {}
+  try { await dbLogActivity(user.id, user.name, 'Tizimga kirdi'); } catch(e) {}
   closeAuth();
   openDashboard();
 }
