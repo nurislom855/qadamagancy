@@ -747,7 +747,7 @@ const MENUS = {
   smm:        [{i:'🏠',l:'Bosh sahifa',p:'overview'},{i:'📱',l:'Kontent rejasi',p:'smm'},{i:'📤',l:'Fayl yuborish',p:'uploads'},{i:'📁',l:'Mening ishlarim',p:'myworks'}],
   sales:      [{i:'🏠',l:'Bosh sahifa',p:'overview'},{i:'📄',l:'Shartnoma tuzish',p:'contracts'},{i:'🤝',l:'Mijozlar',p:'clients'},{i:'📊',l:'Savdo statistikasi',p:'finance'}],
   accountant: [{i:'🏠',l:'Bosh sahifa',p:'overview'},{i:'💰',l:'Moliya',p:'finance'},{i:'📄',l:'Shartnomalar',p:'contracts'}],
-  client:     [{i:'🏠',l:'Loyiham',p:'overview'},{i:'📊',l:'Hisobot',p:'reports'},{i:'💬',l:'Menejer bilan chat',p:'chats'}],
+  client:     [{i:'🏠',l:'Loyiham',p:'overview'},{i:'📤',l:'Fayl yuborish',p:'client_upload'},{i:'🤖',l:'AI Maslahat',p:'ai_consult'},{i:'📊',l:'Hisobotlar',p:'client_reports'},{i:'💬',l:'Chat',p:'chats'}],
 };
 
 function buildSidebar(role) {
@@ -788,6 +788,9 @@ async function loadPanel(name) {
     case 'settings':    renderSettings(main); break;
     case 'myworks':     await renderMyWorks(main); break;
     case 'smm':         await renderSmm(main); break;
+    case 'client_upload': renderClientUpload(main); break;
+    case 'ai_consult':  renderAiConsult(main); break;
+    case 'client_reports': await renderClientReports(main); break;
     default: main.innerHTML = '<div style="padding:40px;color:var(--text2)">Bu bo\'lim tez orada qo\'shiladi</div>';
   }
 }
@@ -1295,6 +1298,390 @@ function handleFile(inp) {
     alert('✅ '+inp.files.length+' ta fayl qabul qilindi!');
   }
 }
+// ============================================================
+// CLIENT UPLOAD PANEL
+// ============================================================
+function renderClientUpload(el) {
+  el.innerHTML = `
+  <div class="page-title">📤 Fayl yuborish</div>
+  <div class="page-sub">Loyihangiz uchun materiallarni yuboring</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div class="upload-area" onclick="document.getElementById('cli_file1').click()" style="padding:28px">
+      <div class="ui">🖼️</div>
+      <p><b>Rasm / Dizayn</b></p>
+      <p style="font-size:12px;margin-top:4px">PNG, JPG, PDF</p>
+      <input type="file" id="cli_file1" style="display:none" accept="image/*,.pdf" onchange="cliFileUpload(this,'Rasm/Dizayn')">
+    </div>
+    <div class="upload-area" onclick="document.getElementById('cli_file2').click()" style="padding:28px">
+      <div class="ui">🎬</div>
+      <p><b>Video material</b></p>
+      <p style="font-size:12px;margin-top:4px">MP4, MOV, AVI</p>
+      <input type="file" id="cli_file2" style="display:none" accept="video/*" onchange="cliFileUpload(this,'Video')">
+    </div>
+    <div class="upload-area" onclick="document.getElementById('cli_file3').click()" style="padding:28px">
+      <div class="ui">📝</div>
+      <p><b>Hujjat / Matn</b></p>
+      <p style="font-size:12px;margin-top:4px">DOCX, TXT, XLSX</p>
+      <input type="file" id="cli_file3" style="display:none" accept=".doc,.docx,.txt,.xlsx,.xls" onchange="cliFileUpload(this,'Hujjat')">
+    </div>
+    <div class="upload-area" onclick="document.getElementById('cli_file4').click()" style="padding:28px">
+      <div class="ui">📦</div>
+      <p><b>Boshqa fayl</b></p>
+      <p style="font-size:12px;margin-top:4px">Har qanday format</p>
+      <input type="file" id="cli_file4" style="display:none" onchange="cliFileUpload(this,'Boshqa')">
+    </div>
+  </div>
+
+  <div class="form-card">
+    <h3>📋 Izoh qoldiring</h3>
+    <div class="form-full">
+      <label class="f-label">Fayl turi yoki vazifa haqida qisqacha</label>
+      <textarea class="f-input" id="cli_note" placeholder="Masalan: Bu logotipning yangi versiyasi, iltimos ranglarga e'tibor bering..." style="min-height:80px;resize:vertical"></textarea>
+    </div>
+    <button class="btn-primary" onclick="cliSendNote()">📨 Izohni yuborish</button>
+    <div id="cli_note_msg" style="font-size:13px;margin-top:8px"></div>
+  </div>
+
+  <div id="cli_upload_log" class="act-log">
+    <h3>📁 Yuborilgan fayllar</h3>
+    <p style="color:var(--text2);font-size:13px">Hali fayl yuborilmagan</p>
+  </div>`;
+}
+
+function cliFileUpload(inp, type) {
+  if (!inp.files.length) return;
+  const names = Array.from(inp.files).map(f=>f.name).join(', ');
+  const log = document.getElementById('cli_upload_log');
+
+  sb.from('files').insert({
+    file_name: names, file_type: type,
+    uploaded_by: currentUser.id, status: 'pending'
+  }).then(()=>{});
+
+  sb.from('activity_log').insert({
+    user_id: currentUser.id, user_name: currentUser.name,
+    action: type + ' fayl yubordi: ' + names
+  }).then(()=>{});
+
+  tg(\`📤 *Mijoz fayl yubordi*\n\n👤 \${currentUser.name}\n📎 \${names}\n📂 Tur: \${type}\`);
+
+  if (log) {
+    const item = document.createElement('div');
+    item.className = 'act-item';
+    item.innerHTML = \`<div class="act-dot" style="background:var(--green)"></div>
+    <div><div class="act-text">✅ <b>\${names}</b> yuborildi</div>
+    <div class="act-time">\${new Date().toLocaleTimeString('uz',{hour:'2-digit',minute:'2-digit'})}</div></div>\`;
+    const p = log.querySelector('p');
+    if (p) p.remove();
+    log.appendChild(item);
+  }
+  alert(\`✅ \${names} muvaffaqiyatli yuborildi!\`);
+}
+
+function cliSendNote() {
+  const note = document.getElementById('cli_note')?.value.trim();
+  const msg = document.getElementById('cli_note_msg');
+  if (!note) { if(msg) msg.style.color='var(--red)', msg.textContent='⚠️ Izoh yozing!'; return; }
+
+  sb.from('messages').insert({
+    sender_id: currentUser.id, receiver_id: 'admin',
+    content: '📋 Izoh: ' + note, is_read: false
+  }).then(()=>{});
+
+  tg(\`📋 *Mijoz izohi*\n\n👤 \${currentUser.name}\n💬 \${note}\`);
+
+  if (msg) msg.style.color='var(--green)', msg.textContent='✅ Izoh yuborildi!';
+  document.getElementById('cli_note').value = '';
+}
+
+// ============================================================
+// AI MASLAHAT — DECISION TREE (API siz)
+// ============================================================
+const AI_TREE = {
+  start: {
+    q: "Biznesingiz haqida birozgina ayting — qaysi sohada ishlaysiz?",
+    opts: [
+      { l:"🍕 Restoran / Oziq-ovqat", next:"food" },
+      { l:"🛍️ Do'kon / Savdo", next:"shop" },
+      { l:"🏋️ Sport / Sog'liqni saqlash", next:"sport" },
+      { l:"🏠 Ko'chmas mulk / Qurilish", next:"realty" },
+      { l:"💄 Go'zallik / Moda", next:"beauty" },
+      { l:"🎓 Ta'lim / Kurslar", next:"edu" },
+      { l:"💻 IT / Texnologiya", next:"tech" },
+      { l:"🏭 Ishlab chiqarish", next:"mfg" },
+    ]
+  },
+
+  food:   { q:"Asosiy maqsadingiz nima?", opts:[{l:"Yangi mijozlar jalb qilish",next:"goal_attract"},{l:"Brendni kuchaytirish",next:"goal_brand"},{l:"Online buyurtmalarni ko'paytirish",next:"goal_online"},{l:"Doimiy mijozlarni saqlash",next:"goal_retain"}] },
+  shop:   { q:"Qaysi platforma asosiy?", opts:[{l:"Instagram / Facebook",next:"goal_smm"},{l:"Veb sayt / Online do'kon",next:"goal_web"},{l:"Offline (jismoniy do'kon)",next:"goal_offline"},{l:"Hammasi kerak",next:"goal_full"}] },
+  sport:  { q:"Auditoriyangiz kimlar?", opts:[{l:"Yoshlar (18-30)",next:"aud_young"},{l:"O'rta yoshlilar (30-50)",next:"aud_mid"},{l:"Oilalar",next:"aud_family"},{l:"Professionallar",next:"aud_pro"}] },
+  realty: { q:"Qaysi xizmat kerak?", opts:[{l:"Sotish uchun reklama",next:"goal_attract"},{l:"Ijara uchun reklama",next:"goal_attract"},{l:"Brend yaratish",next:"goal_brand"},{l:"Video turlari",next:"rec_video"}] },
+  beauty: { q:"Asosiy kanal qaysi?", opts:[{l:"Instagram",next:"goal_smm"},{l:"TikTok",next:"rec_tiktok"},{l:"Ikkalasi ham",next:"goal_smm"},{l:"Bilmayman",next:"goal_brand"}] },
+  edu:    { q:"Format qanday?", opts:[{l:"Online kurslar",next:"goal_online"},{l:"Offline o'quv markazi",next:"goal_offline"},{l:"Aralash",next:"goal_full"},{l:"Individual darslar",next:"goal_attract"}] },
+  tech:   { q:"Maqsadli auditoriya?", opts:[{l:"B2B (biznes mijozlar)",next:"aud_pro"},{l:"B2C (oddiy foydalanuvchilar)",next:"aud_young"},{l:"Ikkalasi",next:"goal_full"},{l:"Xorijiy bozor",next:"goal_global"}] },
+  mfg:    { q:"Asosiy muammo nima?", opts:[{l:"Mijozlar topish",next:"goal_attract"},{l:"Brend taniqli emas",next:"goal_brand"},{l:"Raqobatchilar ko'p",next:"goal_diff"},{l:"Yangi mahsulot chiqarish",next:"goal_launch"}] },
+
+  goal_attract: { q:"Oylik reklama budjetingiz qancha?", opts:[{l:"1-3 mln UZS",next:"budget_low"},{l:"3-10 mln UZS",next:"budget_mid"},{l:"10-30 mln UZS",next:"budget_high"},{l:"30 mln+ UZS",next:"budget_premium"}] },
+  goal_brand:   { q:"Hozir brendingizning holati?", opts:[{l:"Yangi brend (0 dan)",next:"brand_new"},{l:"Bor, lekin kuchsiz",next:"brand_weak"},{l:"Yaxshi, yangilash kerak",next:"brand_refresh"},{l:"Kuchli, scaling kerak",next:"budget_high"}] },
+  goal_online:  { q:"Online savdoda asosiy to'siq nima?", opts:[{l:"Saytga traffic kam",next:"rec_target"},{l:"Konversiya past",next:"rec_content"},{l:"Ishonch yo'q",next:"rec_smm"},{l:"Raqobat kuchli",next:"goal_diff"}] },
+  goal_retain:  { q:"Doimiy mijozlar bilan aloqa?", opts:[{l:"Telegram kanal/bot",next:"rec_telegram"},{l:"Email marketing",next:"rec_email"},{l:"Loyallik dasturi",next:"rec_loyalty"},{l:"Hech narsa yo'q",next:"rec_smm"}] },
+  goal_smm:     { q:"Kontentni kim yaratadi?", opts:[{l:"O'zimiz yaratamiz",next:"rec_strategy"},{l:"Yordam kerak",next:"rec_smm"},{l:"Hamma narsa kerak",next:"rec_full"},{l:"Faqat dizayn kerak",next:"rec_design"}] },
+  goal_web:     { q:"Sayt bormi?", opts:[{l:"Ha, bor",next:"rec_target"},{l:"Yo'q, kerak",next:"rec_web"},{l:"Bor, lekin eski",next:"rec_web"},{l:"Landing page yetarli",next:"rec_target"}] },
+  goal_offline: { q:"Joyingiz qayerda?", opts:[{l:"Toshkent markaz",next:"rec_local"},{l:"Toshkent chet",next:"rec_local"},{l:"Viloyat",next:"rec_local"},{l:"Bir nechta filial",next:"rec_full"}] },
+  goal_full:    { q:"Qayerdan boshlashni xohlaysiz?", opts:[{l:"Strategiya ishlab chiqish",next:"rec_strategy"},{l:"SMM va kontent",next:"rec_smm"},{l:"Targetli reklama",next:"rec_target"},{l:"Hammasi kompleks",next:"rec_full"}] },
+  goal_diff:    { q:"Raqobatchilardan farqingiz nima?", opts:[{l:"Narx arzonroq",next:"rec_target"},{l:"Sifat yaxshiroq",next:"rec_content"},{l:"Xizmat yaxshi",next:"rec_smm"},{l:"Hali aniqlamadim",next:"rec_strategy"}] },
+  goal_launch:  { q:"Yangi mahsulotni qachon chiqarasiz?", opts:[{l:"1 oy ichida",next:"rec_launch"},{l:"3 oy ichida",next:"rec_strategy"},{l:"6 oy ichida",next:"rec_brand"},{l:"Hali rejada",next:"rec_strategy"}] },
+  goal_global:  { q:"Qaysi bozor?", opts:[{l:"Rossiya / MDH",next:"rec_target"},{l:"Yevropa / Amerika",next:"rec_full"},{l:"Osiyo",next:"rec_full"},{l:"O'zbekiston + xorijiy",next:"rec_full"}] },
+
+  aud_young:   { q:"Ular nimani ko'proq ishlatadi?", opts:[{l:"Instagram / TikTok",next:"rec_smm"},{l:"YouTube",next:"rec_video"},{l:"Telegram",next:"rec_telegram"},{l:"Hammasi",next:"rec_full"}] },
+  aud_mid:     { q:"Ularga qanday yetib borish kerak?", opts:[{l:"Facebook / Instagram",next:"rec_target"},{l:"Google reklama",next:"rec_target"},{l:"Telegram",next:"rec_telegram"},{l:"Offline + online",next:"rec_full"}] },
+  aud_family:  { q:"Asosiy qaror qabul qiluvchi kim?", opts:[{l:"Ona (ayol)",next:"rec_smm"},{l:"Ota (erkak)",next:"rec_target"},{l:"Ikkalasi",next:"rec_full"},{l:"Farzandlar",next:"aud_young"}] },
+  aud_pro:     { q:"B2B aloqa kanali?", opts:[{l:"LinkedIn / Telegram",next:"rec_b2b"},{l:"Email",next:"rec_email"},{l:"Shaxsiy muloqot",next:"rec_strategy"},{l:"Ko'rgazmalar",next:"rec_brand"}] },
+
+  brand_new:    { q:"Logotip va uslub bormi?", opts:[{l:"Yo'q, boshidan kerak",next:"rec_brand"},{l:"Bor, faqat marketing",next:"rec_smm"},{l:"Qisman bor",next:"rec_brand"},{l:"Bilmayman",next:"rec_strategy"}] },
+  brand_weak:   { q:"Nima kuchsiz?", opts:[{l:"Logotip / vizual",next:"rec_design"},{l:"Kontent sifati",next:"rec_content"},{l:"Ijtimoiy tarmoqlar",next:"rec_smm"},{l:"Hamma narsa",next:"rec_full"}] },
+  brand_refresh:{ q:"Nimani yangilash kerak?", opts:[{l:"Vizual identifikatsiya",next:"rec_design"},{l:"Kontent strategiya",next:"rec_strategy"},{l:"Reklama kampaniya",next:"rec_target"},{l:"Hamma narsa",next:"rec_full"}] },
+
+  budget_low:     { q:"Oyiga nechta post/kontent kerak?", opts:[{l:"Haftada 3-4 ta",next:"rec_smm_basic"},{l:"Kuniga 1 ta",next:"rec_smm"},{l:"Faqat targetli reklama",next:"rec_target_only"},{l:"Faqat dizayn",next:"rec_design"}] },
+  budget_mid:     { q:"Qaysi xizmatlar birlashtirilsin?", opts:[{l:"SMM + Target",next:"rec_smm_target"},{l:"Kontent + Dizayn",next:"rec_content"},{l:"Video + SMM",next:"rec_video_smm"},{l:"To'liq paket",next:"rec_full"}] },
+  budget_high:    { q:"Komandasiz yoki biz boshqaramizmi?", opts:[{l:"Siz to'liq boshqaring",next:"rec_full_managed"},{l:"Birgalikda",next:"rec_full"},{l:"Faqat konsultatsiya",next:"rec_consult"},{l:"Audit va strategiya",next:"rec_audit"}] },
+  budget_premium: { q:"Qo'shimcha xizmatlar kerakmi?", opts:[{l:"Brend ambassador",next:"rec_premium"},{l:"PR va media",next:"rec_premium"},{l:"Event marketing",next:"rec_premium"},{l:"Hamma kompleks",next:"rec_premium"}] },
+
+  // FINAL RECOMMENDATIONS
+  rec_smm:        { final: true, title:"📱 SMM Paket", services:["Instagram/Telegram boshqaruv","Kundalik postlar va stories","Auditoriya tahlili","Hashtag strategiyasi"], price:"3-8 mln UZS/oy", why:"Ijtimoiy tarmoqlarda doimiy faol bo'lish brendingizni tanittiradi va mijozlar ishonchini oshiradi." },
+  rec_smm_basic:  { final: true, title:"📱 SMM Boshlang'ich", services:["Haftada 3-4 post","Dizayn va matnlar","Oy oxirida hisobot"], price:"1.5-3 mln UZS/oy", why:"Kichik byudjet bilan ham doimiy kontent saqlab turish muhim." },
+  rec_smm_target: { final: true, title:"📱🎯 SMM + Target Birga", services:["To'liq SMM boshqaruv","Targetli reklama (Meta/Google)","Haftalik analitika","A/B test reklamalar"], price:"5-15 mln UZS/oy", why:"SMM va targetni birlashtirganda organik va pullik traffic bir-birini kuchaytiradi." },
+  rec_target:     { final: true, title:"🎯 Targetli Reklama", services:["Facebook/Instagram Ads","Google Ads","Auditoriya segmentatsiyasi","Konversiya optimizatsiyasi"], price:"3-10 mln UZS/oy", why:"To'g'ri auditoriyaga to'g'ri vaqtda yetib borish — eng samarali reklama usuli." },
+  rec_target_only:{ final: true, title:"🎯 Target Faqat", services:["Facebook/Instagram Ads setup","Reklama matnlari","Byudjet optimallashtirish","Haftalik hisobot"], price:"2-5 mln UZS/oy", why:"Cheklangan byudjet bilan targetli reklama eng tez natija beradi." },
+  rec_content:    { final: true, title:"✍️ Kontent Marketing", services:["Kontent strategiya","Copywriting (postlar, sayt, email)","SEO matnlar","Case studylar"], price:"2-5 mln UZS/oy", why:"Sifatli kontent ishonch yaratadi va uzoq muddatli natija beradi." },
+  rec_video:      { final: true, title:"🎬 Video Ishlab Chiqarish", services:["Reklama roliklari","Reels/Shorts kontent","Korporativ video","Mahsulot prezentatsiyasi"], price:"3-15 mln UZS/video", why:"Video kontent eng yuqori engagement beradigan format hisoblanadi." },
+  rec_video_smm:  { final: true, title:"🎬📱 Video + SMM", services:["Oylik video kontent","Reels/Stories","SMM boshqaruv","Editing va postproduction"], price:"7-20 mln UZS/oy", why:"Video kontent bilan SMM birlashganda brendingiz tez o'sadi." },
+  rec_design:     { final: true, title:"🎨 Grafik Dizayn", services:["Logo va brandbook","Post shablon dizayn","Banner va reklama materiallari","Packaging dizayn"], price:"2-8 mln UZS", why:"Professional vizual identifikatsiya brendingizni raqobatchilardan ajratadi." },
+  rec_brand:      { final: true, title:"🌐 Brend Yaratish", services:["Brend strategiya","Logo va identifikatsiya","Brandbook","Ijtimoiy tarmoq dizayn"], price:"5-20 mln UZS", why:"Kuchli brend — barcha marketing harakatlaringizning asosi." },
+  rec_strategy:   { final: true, title:"📋 Marketing Strategiya", services:["Bozor tahlili","Raqobat tahlili","Maqsadli auditoriya profili","6 oylik marketing reja"], price:"3-8 mln UZS", why:"Strategiyasiz marketing — xaritasiz yo'l bosish. To'g'ri strategiya pul va vaqt tejaydi." },
+  rec_full:       { final: true, title:"💎 Full Marketing Paket", services:["SMM va kontent boshqaruv","Targetli reklama","Grafik dizayn","Video kontent","Oylik tahlil va hisobot"], price:"15-50 mln UZS/oy", why:"Barcha kanallarni bir joyda boshqarish sinergiya yaratadi va natijalarni keskin oshiradi." },
+  rec_full_managed:{ final: true, title:"👑 Premium Boshqaruv", services:["Dedicated menejer","To'liq SMM, Design, Video","Kunlik hisobotlar","Strategik maslahatlar"], price:"30-80 mln UZS/oy", why:"Biznesingizga to'liq e'tibor — siz faqat natijaga qarang." },
+  rec_launch:     { final: true, title:"🚀 Mahsulot Launch", services:["Launch strategiya","Pre-launch hype kampaniya","Influencer marketing","Launch kuni reklama"], price:"10-30 mln UZS", why:"To'g'ri launch 1 oy ishi bir yilga teng natija berishi mumkin." },
+  rec_telegram:   { final: true, title:"✈️ Telegram Marketing", services:["Telegram kanal boshqaruv","Bot yaratish","Kontent reja","Obunachi o'stirish"], price:"2-6 mln UZS/oy", why:"O'zbekistonda Telegram eng faol platforma — u yerda bo'lish shart." },
+  rec_web:        { final: true, title:"🌐 Veb Sayt + SEO", services:["Landing page yoki sayt","SEO optimizatsiya","Google reklama","Konversiya dizayn"], price:"5-15 mln UZS", why:"Professional sayt — 24/7 ishlayotgan savdo menejeri." },
+  rec_local:      { final: true, title:"📍 Mahalliy Marketing", services:["Geo-target reklama","Google Maps optimallashtirish","Lokal SMM","Offline + online integratsiya"], price:"3-8 mln UZS/oy", why:"Mahalliy auditoriyaga aniq yetib borish — eng samarali yondashuv." },
+  rec_b2b:        { final: true, title:"🤝 B2B Marketing", services:["LinkedIn va Telegram PR","Email marketing kampaniya","Korporativ kontentlar","Case study va whitepaper"], price:"5-15 mln UZS/oy", why:"B2B marketing uzunroq sikl, lekin har bir mijoz katta qadriyat." },
+  rec_email:      { final: true, title:"📧 Email + CRM Marketing", services:["Email strategiya","Avtomatik kampaniyalar","CRM sozlash","Segment va personalizatsiya"], price:"2-5 mln UZS/oy", why:"Email marketing eng yuqori ROI beradigan kanal (o'rtacha 42x)." },
+  rec_loyalty:    { final: true, title:"💛 Loyallik Dasturi", services:["Loyallik programma dizayn","Telegram bot integratsiya","Cashback/bonus tizimi","Doimiy mijoz kontent"], price:"5-15 mln UZS", why:"Yangi mijoz topish eski mijozni saqlab qolishdan 5x qimmat." },
+  rec_tiktok:     { final: true, title:"🎵 TikTok Marketing", services:["TikTok akkaunt boshqaruv","Viral kontent yaratish","TikTok Ads","Trend monitoring"], price:"4-10 mln UZS/oy", why:"TikTok — hozir eng tez o'sayotgan platforma, yoshlar uchun ideal." },
+  rec_consult:    { final: true, title:"💡 Marketing Konsultatsiya", services:["1-2 soatlik sessiya","Mavjud strategiya tahlili","Tavsiyalar va yo'l xaritasi","Folow-up support"], price:"500k-2 mln UZS", why:"Ba'zan tashqaridan ko'z kerak — konsultatsiya investitsiyasi tez qaytadi." },
+  rec_audit:      { final: true, title:"🔍 Marketing Audit", services:["Social media audit","Raqobat tahlili","Kontent tahlili","Amaliy tavsiyalar hisoboti"], price:"1-3 mln UZS", why:"Nima yaxshi, nima yomon ishlayotganini bilib olmasdan oldinga ketib bo'lmaydi." },
+  rec_premium:    { final: true, title:"✨ Premium Xizmatlar", services:["Brand ambassador strategiya","PR va media munosabatlari","Event marketing","360° kampaniya"], price:"50 mln+ UZS", why:"Premium darajadagi marketingni professional jamoa bilan amalga oshiring." },
+};
+
+let aiState = { path:[], current:'start', answers:{} };
+
+function renderAiConsult(el) {
+  aiState = { path:[], current:'start', answers:{} };
+  el.innerHTML = `
+  <div class="page-title">🤖 AI Marketing Maslahat</div>
+  <div class="page-sub">Bir necha savol orqali sizga mos marketing yechim topamiz</div>
+  <div id="ai_wrap" style="max-width:680px">
+    <div id="ai_progress" style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px">
+        <span>Savol 1</span><span id="ai_prog_pct">0%</span>
+      </div>
+      <div style="background:var(--bg3);border-radius:4px;height:6px;overflow:hidden">
+        <div id="ai_prog_bar" style="background:linear-gradient(90deg,var(--accent2),var(--accent));height:100%;width:0%;transition:width .4s ease;border-radius:4px"></div>
+      </div>
+    </div>
+    <div id="ai_chat"></div>
+    <div id="ai_result"></div>
+  </div>`;
+  aiAsk('start');
+}
+
+function aiAsk(nodeKey) {
+  const node = AI_TREE[nodeKey];
+  if (!node) return;
+  aiState.current = nodeKey;
+
+  const chat = document.getElementById('ai_chat');
+  const maxDepth = 6;
+  const pct = Math.min(Math.round((aiState.path.length / maxDepth) * 100), 95);
+  const pBar = document.getElementById('ai_prog_bar');
+  const pPct = document.getElementById('ai_prog_pct');
+  if (pBar) pBar.style.width = pct + '%';
+  if (pPct) pPct.textContent = pct + '%';
+
+  const stepNum = document.querySelector('#ai_progress span');
+  if (stepNum) stepNum.textContent = 'Savol ' + (aiState.path.length + 1);
+
+  if (!chat) return;
+
+  // Add question bubble
+  const qDiv = document.createElement('div');
+  qDiv.style.cssText = 'margin-bottom:20px;animation:fadeUp .3s ease';
+  qDiv.innerHTML = \`
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
+      <div style="width:36px;height:36px;background:var(--accent2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🤖</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;border-top-left-radius:4px;padding:14px 18px;font-size:15px;line-height:1.5;max-width:520px">\${node.q}</div>
+    </div>
+    <div id="opts_\${nodeKey}" style="display:flex;flex-wrap:wrap;gap:8px;padding-left:46px"></div>\`;
+  chat.appendChild(qDiv);
+
+  const optsDiv = document.getElementById('opts_' + nodeKey);
+  node.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.l;
+    btn.style.cssText = 'background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;font-family:inherit';
+    btn.onmouseover = () => { btn.style.borderColor = 'var(--accent2)'; btn.style.color = 'var(--accent)'; };
+    btn.onmouseout  = () => { btn.style.borderColor = 'var(--border)'; btn.style.color = 'var(--text)'; };
+    btn.onclick = () => {
+      // Disable all options
+      optsDiv.querySelectorAll('button').forEach(b => { b.disabled=true; b.style.opacity='.4'; });
+      btn.style.cssText += 'opacity:1!important;background:var(--accent2);color:#fff;border-color:var(--accent2)';
+
+      // Show user answer
+      const ansDiv = document.createElement('div');
+      ansDiv.style.cssText = 'display:flex;justify-content:flex-end;margin:10px 0 4px;padding-left:46px;animation:fadeUp .2s ease';
+      ansDiv.innerHTML = \`<div style="background:var(--accent2);color:#fff;border-radius:14px;border-bottom-right-radius:4px;padding:8px 16px;font-size:13px">\${opt.l}</div>\`;
+      chat.appendChild(ansDiv);
+      chat.scrollTop = chat.scrollHeight;
+
+      aiState.path.push(nodeKey);
+      aiState.answers[nodeKey] = opt.l;
+
+      const nextNode = AI_TREE[opt.next];
+      if (!nextNode) return;
+
+      if (nextNode.final) {
+        setTimeout(() => aiShowResult(opt.next), 400);
+      } else {
+        setTimeout(() => aiAsk(opt.next), 500);
+      }
+    };
+    optsDiv.appendChild(btn);
+  });
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function aiShowResult(nodeKey) {
+  const rec = AI_TREE[nodeKey];
+  if (!rec || !rec.final) return;
+
+  const pBar = document.getElementById('ai_prog_bar');
+  const pPct = document.getElementById('ai_prog_pct');
+  if (pBar) pBar.style.width = '100%';
+  if (pPct) pPct.textContent = '100%';
+
+  const chat = document.getElementById('ai_chat');
+  const res  = document.getElementById('ai_result');
+
+  if (chat) {
+    const doneDiv = document.createElement('div');
+    doneDiv.style.cssText = 'display:flex;gap:10px;align-items:flex-start;margin:16px 0;animation:fadeUp .3s ease';
+    doneDiv.innerHTML = \`<div style="width:36px;height:36px;background:var(--accent2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🤖</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;border-top-left-radius:4px;padding:14px 18px;font-size:14px;line-height:1.5">
+      Zo'r! Barcha javoblaringizni tahlil qildim 🎉<br>Sizga mos yechim quyida:
+    </div>\`;
+    chat.appendChild(doneDiv);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  if (!res) return;
+  res.style.animation = 'fadeUp .4s ease';
+  res.innerHTML = \`
+  <div style="background:var(--bg2);border:2px solid var(--accent);border-radius:20px;padding:28px;margin-top:20px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="font-size:40px">🎯</div>
+      <div>
+        <h3 style="font-size:22px;font-weight:800;margin-bottom:4px">\${rec.title}</h3>
+        <div style="font-size:14px;color:var(--text2)">Sizga tavsiya etilgan xizmat</div>
+      </div>
+    </div>
+
+    <div style="background:rgba(46,213,115,.08);border:1px solid rgba(46,213,115,.2);border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px">✅ Nima kiritiladi?</div>
+      \${rec.services.map(s=>\`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:14px"><span style="color:var(--green)">▸</span>\${s}</div>\`).join('')}
+    </div>
+
+    <div style="background:rgba(232,255,71,.06);border:1px solid rgba(232,255,71,.15);border-radius:12px;padding:14px;margin-bottom:16px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">💰 Taxminiy narx</div>
+      <div style="font-size:18px;font-weight:700">\${rec.price}</div>
+    </div>
+
+    <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:14px;margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent2);margin-bottom:6px">💡 Nima uchun bu?</div>
+      <div style="font-size:14px;line-height:1.6;color:var(--text2)">\${rec.why}</div>
+    </div>
+
+    <div style="background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">📋 Sizning yo'lingiz:</div>
+      \${Object.entries(aiState.answers).map(([k,v])=>\`<div style="font-size:12px;color:var(--text2);padding:3px 0">▸ \${v}</div>\`).join('')}
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="aiSendResult('\${rec.title}','\${rec.price}')" class="btn-primary" style="flex:1;min-width:180px">📨 Adminga yuborish</button>
+      <button onclick="renderAiConsult(document.getElementById('mainContent'))" style="flex:1;min-width:180px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:13px;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit">🔄 Qayta boshlash</button>
+    </div>
+  </div>\`;
+}
+
+function aiSendResult(title, price) {
+  const answers = Object.entries(aiState.answers).map(([k,v])=>'• '+v).join('\n');
+  const msg = \`🤖 *AI Maslahat natijasi*\n\n👤 \${currentUser.name}\n\n🎯 Tavsiya: *\${title}*\n💰 Narx: \${price}\n\n📋 Javoblar:\n\${answers}\`;
+
+  sb.from('messages').insert({sender_id:currentUser.id, receiver_id:'admin', content:'🤖 AI tavsiya: '+title+' ('+price+')', is_read:false}).then(()=>{});
+  sb.from('activity_log').insert({user_id:currentUser.id, user_name:currentUser.name, action:'AI maslahat so`radi: '+title}).then(()=>{});
+  tg(msg);
+
+  alert("✅ Natija adminga yuborildi! Tez orada bog'lanamiz.");
+}
+
+// ============================================================
+// CLIENT REPORTS PANEL
+// ============================================================
+async function renderClientReports(el) {
+  const [msgsRes, filesRes, actRes] = await Promise.all([
+    sb.from('messages').select('id,content,created_at').eq('sender_id', currentUser.id).order('created_at',{ascending:false}).limit(10),
+    sb.from('files').select('id,file_name,file_type,status,created_at').eq('uploaded_by', currentUser.id).order('created_at',{ascending:false}),
+    sb.from('activity_log').select('action,created_at').eq('user_id', currentUser.id).order('created_at',{ascending:false}).limit(20)
+  ]);
+
+  const msgs  = msgsRes.data||[];
+  const files = filesRes.data||[];
+  const acts  = actRes.data||[];
+
+  const approvedFiles = files.filter(f=>f.status==='approved').length;
+  const pendingFiles  = files.filter(f=>f.status==='pending').length;
+
+  el.innerHTML = \`
+  <div class="page-title">📊 Mening Hisobotlarim</div>
+  <div class="page-sub">Faoliyatingiz va yuborilgan materiallar</div>
+
+  <div class="stats-row">
+    <div class="stat-card accent"><div class="si">📤</div><div class="sn">\${files.length}</div><div class="sl">Yuborilgan fayllar</div></div>
+    <div class="stat-card purple"><div class="si">✅</div><div class="sn">\${approvedFiles}</div><div class="sl">Qabul qilingan</div></div>
+    <div class="stat-card"><div class="si">⏳</div><div class="sn">\${pendingFiles}</div><div class="sl">Ko'rib chiqilmoqda</div></div>
+    <div class="stat-card"><div class="si">💬</div><div class="sn">\${msgs.length}</div><div class="sl">Yuborilgan xabarlar</div></div>
+  </div>
+
+  \${files.length ? \`<div class="tbl-wrap" style="margin-bottom:18px">
+    <div class="tbl-head"><h3>📁 Fayllarim</h3></div>
+    <table><thead><tr><th>Fayl nomi</th><th>Tur</th><th>Sana</th><th>Holat</th></tr></thead>
+    <tbody>\${files.map(f=>\`<tr>
+      <td>\${f.file_name}</td>
+      <td style="font-size:12px;color:var(--text2)">\${f.file_type||'—'}</td>
+      <td style="font-size:12px;color:var(--text2)">\${new Date(f.created_at).toLocaleDateString('uz-UZ')}</td>
+      <td><span class="badge \${f.status==='approved'?'bg-green':f.status==='rejected'?'bg-red':'bg-yellow'}">\${f.status==='approved'?'✅ Qabul':f.status==='rejected'?'❌ Rad':'⏳ Kutilmoqda'}</span></td>
+    </tr>\`).join('')}</tbody></table>
+  </div>\` : ''}
+
+  <div class="act-log">
+    <h3>🕐 So'nggi faoliyatim</h3>
+    \${acts.map(a=>\`<div class="act-item"><div class="act-dot"></div>
+    <div><div class="act-text">\${a.action}</div>
+    <div class="act-time">\${new Date(a.created_at).toLocaleString('uz-UZ')}</div></div></div>\`).join('') || '<p style="color:var(--text2);font-size:13px">Hali faoliyat yo\'q</p>'}
+  </div>\`;
+}
+
 </script>
 </body>
 </html>
