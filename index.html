@@ -881,13 +881,35 @@ async function renderEmployees(el) {
 }
 
 async function renderClients(el) {
-  const { data } = await sb.from('clients').select('*').order('created_at',{ascending:false});
-  const clients = data||[];
+  const [cliRes, pendRes] = await Promise.all([
+    sb.from('clients').select('*').order('created_at',{ascending:false}),
+    sb.from('users').select('id,name,email,phone,is_active,created_at').eq('role','client').eq('is_active',false)
+  ]);
+  const clients = cliRes.data||[];
+  const pendingUsers = pendRes.data||[];
+
+  const pendingHtml = pendingUsers.length ? `
+  <div class="pending-section">
+    <h4>⏳ Tasdiqlash kutilmoqda (${pendingUsers.length})</h4>
+    ${pendingUsers.map(u=>`
+    <div class="pending-item">
+      <div class="pending-info">
+        <b>👤 ${u.name}</b>
+        <span>📧 ${u.email||'—'} · 📞 ${u.phone||'—'}</span>
+      </div>
+      <div class="pending-btns">
+        <button class="act-btn success" onclick="approveUser('${u.id}','${u.name}','${u.email||''}')">✅ Tasdiqlash</button>
+        <button class="act-btn danger" onclick="rejectUser('${u.id}','${u.name}')">❌ Rad</button>
+      </div>
+    </div>`).join('')}
+  </div>` : '';
+
   el.innerHTML = `
   <div class="page-title">Mijozlar</div>
-  <div class="page-sub">Jami: ${clients.length} mijoz</div>
+  <div class="page-sub">Jami: ${clients.length} faol mijoz${pendingUsers.length?' · <span style="color:var(--amber)">⏳ '+pendingUsers.length+' tasdiq kutilmoqda</span>':''}</div>
+  ${pendingHtml}
   <div class="tbl-wrap">
-    <div class="tbl-head"><h3>Mijozlar ro'yxati</h3><button class="act-btn" onclick="showAddCli()">+ Qo'shish</button></div>
+    <div class="tbl-head"><h3>Faol mijozlar</h3><button class="act-btn" onclick="showAddCli()">+ Qo'shish</button></div>
     <div class="add-row" id="addCliRow">
       <div class="add-grid">
         <input class="f-input" id="nc_co" placeholder="Kompaniya nomi" style="min-width:160px">
@@ -903,11 +925,15 @@ async function renderClients(el) {
       <td>${c.service||'—'}</td>
       <td><span class="badge ${c.status==='active'?'bg-green':c.status==='new'?'bg-blue':'bg-yellow'}">${c.status==='active'?'● Faol':c.status==='new'?'● Yangi':'● Jarayonda'}</span></td>
       <td style="font-size:12px;color:var(--text2)">${c.created_at?new Date(c.created_at).toLocaleDateString('uz-UZ'):'—'}</td>
-      <td><button class="act-btn danger" onclick="deleteCli('${c.id}','${c.company}')">O'chirish</button></td>
+      <td>
+        <button class="act-btn" onclick="activateCli('${c.id}')">✅ Faollashtirish</button>
+        <button class="act-btn danger" onclick="deleteCli('${c.id}','${c.company}')">O'chirish</button>
+      </td>
     </tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--text2)">Mijozlar yo\'q</td></tr>'}</tbody>
     </table>
   </div>`;
 }
+
 
 async function renderProjects(el) {
   const { data } = await sb.from('projects').select('*').order('created_at',{ascending:false});
@@ -1185,6 +1211,11 @@ async function saveNewCli() {
 async function deleteCli(id,name) {
   if(!confirm(name+' mijozni o\'chirasizmi?'))return;
   await sb.from('clients').delete().eq('id',id);
+  loadPanel('clients');
+}
+
+async function activateCli(id) {
+  await sb.from('clients').update({status:'active'}).eq('id',id);
   loadPanel('clients');
 }
 
