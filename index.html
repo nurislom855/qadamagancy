@@ -591,50 +591,65 @@
 <div class="overlay" id="authOverlay">
   <div class="modal">
     <button class="modal-close" onclick="closeAuth()">✕</button>
-    <h2 data-key="auth_title">Xush kelibsiz</h2>
-    <p class="sub" data-key="auth_sub">Qadam Agency tizimiga kiring</p>
+    <h2>Xush kelibsiz</h2>
+    <p class="sub">Qadam Agency tizimiga kiring</p>
 
     <div class="tab-switcher">
-      <button class="tab-btn active" onclick="setTab('login')" data-key="tab_login">Kirish</button>
-      <button class="tab-btn" onclick="setTab('register')" data-key="tab_reg">Ro'yxatdan o'tish</button>
+      <button class="tab-btn active" onclick="setTab('login')">Kirish</button>
+      <button class="tab-btn" onclick="setTab('register')">Ro'yxatdan o'tish</button>
     </div>
 
     <!-- LOGIN -->
     <div id="loginPanel">
-      <div class="login-types">
-        <div class="login-type-btn active" onclick="selectLoginType('employee')" id="lt_emp">
-          <span class="icon">👤</span>
-          <span data-key="lt_emp">Xodim</span>
-        </div>
-        <div class="login-type-btn" onclick="selectLoginType('client')" id="lt_cli">
-          <span class="icon">🤝</span>
-          <span data-key="lt_cli">Mijoz</span>
-        </div>
-      </div>
       <div id="authAlert" class="alert alert-error" style="display:none"></div>
       <div class="input-group">
-        <label data-key="lbl_id">ID raqam</label>
-        <input type="text" id="loginId" placeholder="admin">
+        <label>Gmail</label>
+        <input type="email" id="loginEmail" placeholder="email@gmail.com" onkeydown="if(event.key==='Enter') doLogin()">
       </div>
       <div class="input-group">
-        <label data-key="lbl_pass">Parol</label>
+        <label>Parol</label>
         <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
       </div>
-      <button class="btn-full" onclick="doLogin()" data-key="btn_enter">Kirish</button>
-
+      <button class="btn-full" onclick="doLogin()">Kirish</button>
     </div>
 
-    <!-- REGISTER — Telegram botga yo'naltirish -->
+    <!-- REGISTER -->
     <div id="registerPanel" style="display:none">
-      <div class="tg-redirect-box">
-        <div class="tg-big-icon">✈️</div>
-        <h3>Telegram Bot orqali ro'yxatdan o'ting</h3>
-        <p>Ro'yxatdan o'tish uchun bizning Telegram botimizga o'ting. Bot sizni yo'naltiradi va ma'lumotlaringizni to'ldirgach, admin sizga <strong>ID va parol</strong> yuboradi.</p>
-        <button class="btn-full btn-tg" onclick="window.open('https://t.me/nmv_uz','_blank')">
-          ✈️ Telegram botga o'tish
-        </button>
-        <p style="font-size:11px;color:var(--text2);margin-top:12px">Bot orqali ariza topshirgandan so'ng admin siz bilan bog'lanadi</p>
+      <div id="regAlert" class="alert alert-error" style="display:none"></div>
+      <div class="input-group">
+        <label>Ism Familiya</label>
+        <input type="text" id="regName" placeholder="Alisher Karimov">
       </div>
+      <div class="input-group">
+        <label>Gmail</label>
+        <input type="email" id="regEmail" placeholder="email@gmail.com">
+      </div>
+      <div class="input-group">
+        <label>Parol</label>
+        <input type="password" id="regPass" placeholder="Kamida 6 ta belgi">
+      </div>
+      <div class="input-group">
+        <label>Telefon</label>
+        <input type="tel" id="regPhone" placeholder="+998 90 000 00 00">
+      </div>
+      <div class="input-group">
+        <label>Rol</label>
+        <select id="regRole">
+          <option value="client">🤝 Mijoz</option>
+          <option value="mobilograf">📸 Mobilograf</option>
+          <option value="montajor">🎬 Montajor</option>
+          <option value="designer">🎨 Dizayner</option>
+          <option value="copywriter">✍️ Copywriter</option>
+          <option value="smm">📱 SMM Menejer</option>
+          <option value="sales">💼 Sotuv Menejer</option>
+          <option value="pm">📋 Proekt Menejer</option>
+          <option value="accountant">🧾 Buxgalter</option>
+        </select>
+      </div>
+      <button class="btn-full" onclick="doRegister()">Ro'yxatdan o'tish</button>
+      <p style="font-size:11px;color:var(--text2);margin-top:10px;text-align:center">
+        Ro'yxatdan o'tgach admin tasdiqlashi kerak
+      </p>
     </div>
   </div>
 </div>
@@ -694,6 +709,9 @@ function saveNewProject() { window.saveNewProject && window.saveNewProject(); }
 function deleteProject(id) { window.deleteProject && window.deleteProject(id); }
 function showAddFinanceForm() { window.showAddFinanceForm && window.showAddFinanceForm(); }
 function saveNewFinance() { window.saveNewFinance && window.saveNewFinance(); }
+function doRegister() { window.doRegister && window.doRegister(); }
+function approveUser(id) { window.approveUser && window.approveUser(id); }
+function rejectUser(id) { window.rejectUser && window.rejectUser(id); }
 
 // ========== CONFIG ==========
 const BOT_TOKEN = '8935783052:AAGKyppUvqBDB-WPCJhxEm0Yk_LuKLng-y8';
@@ -733,7 +751,9 @@ async function dbGetActivity() {
 async function dbGetEmployees() {
   const { data } = await sb.from('users')
     .select('id,role,name,avatar,role_label,is_active,last_login,phone,email,created_at')
-    .neq('role','client').order('created_at');
+    .neq('role','client')
+    .order('is_active', { ascending: true })
+    .order('created_at', { ascending: false });
   return data || [];
 }
 
@@ -1028,14 +1048,14 @@ window.setTab = function(t) {
 let currentUser = null;
 
 window.doLogin = async function() {
-  const id = document.getElementById('loginId').value.trim().toLowerCase();
-  const pass = document.getElementById('loginPass').value;
+  const email = document.getElementById('loginEmail')?.value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass')?.value;
   const alertEl = document.getElementById('authAlert');
   const btn = document.querySelector('#loginPanel .btn-full');
 
-  if (!id || !pass) {
+  if (!email || !pass) {
     alertEl.style.display = 'block';
-    alertEl.textContent = '⚠️ ID va parolni kiriting!';
+    alertEl.textContent = '⚠️ Gmail va parolni kiriting!';
     return;
   }
 
@@ -1045,7 +1065,7 @@ window.doLogin = async function() {
 
   let user = null;
   try {
-    const { data, error } = await sb.rpc('login_user', { p_id: id, p_password: pass });
+    const { data, error } = await sb.rpc('login_by_email', { p_email: email, p_password: pass });
     if (!error && data && data.length > 0) user = data[0];
   } catch(e) {}
 
@@ -1054,7 +1074,13 @@ window.doLogin = async function() {
 
   if (!user) {
     alertEl.style.display = 'block';
-    alertEl.textContent = '❌ ID yoki parol noto\'g\'ri!';
+    alertEl.textContent = '❌ Gmail yoki parol noto'g'ri!';
+    return;
+  }
+
+  if (!user.is_active) {
+    alertEl.style.display = 'block';
+    alertEl.textContent = '⏳ Hisobingiz hali tasdiqlanmagan. Admin tasdiqlashini kuting!';
     return;
   }
 
@@ -1063,7 +1089,8 @@ window.doLogin = async function() {
     role: user.role,
     name: user.name,
     avatar: user.avatar || '👤',
-    roleLabel: user.role_label || user.role
+    roleLabel: user.role_label || user.role,
+    email: user.email
   };
 
   try { await dbUpdateUserLogin(user.id); } catch(e) {}
@@ -1071,6 +1098,84 @@ window.doLogin = async function() {
   closeAuth();
   openDashboard();
 }
+
+window.doRegister = async function() {
+  const name = document.getElementById('regName')?.value.trim();
+  const email = document.getElementById('regEmail')?.value.trim().toLowerCase();
+  const pass = document.getElementById('regPass')?.value;
+  const phone = document.getElementById('regPhone')?.value.trim();
+  const role = document.getElementById('regRole')?.value;
+  const alertEl = document.getElementById('regAlert');
+  const btn = document.querySelector('#registerPanel .btn-full');
+
+  if (!name || !email || !pass) {
+    alertEl.style.display = 'block';
+    alertEl.textContent = '⚠️ Ism, Gmail va parol majburiy!';
+    return;
+  }
+  if (pass.length < 6) {
+    alertEl.style.display = 'block';
+    alertEl.textContent = '⚠️ Parol kamida 6 ta belgi bo'lishi kerak!';
+    return;
+  }
+
+  alertEl.style.display = 'none';
+  btn.textContent = '⏳ Saqlanmoqda...';
+  btn.disabled = true;
+
+  // Check if email exists
+  const { data: existing } = await sb.from('users').select('id').eq('email', email);
+  if (existing && existing.length > 0) {
+    alertEl.style.display = 'block';
+    alertEl.textContent = '❌ Bu Gmail allaqachon ro'yxatdan o'tgan!';
+    btn.textContent = 'Ro'yxatdan o'tish';
+    btn.disabled = false;
+    return;
+  }
+
+  const roleLabels = {pm:'PM',mobilograf:'Mobilograf',montajor:'Montajor',designer:'Dizayner',
+    copywriter:'Copywriter',smm:'SMM',sales:'Sotuv',accountant:'Buxgalter',client:'Mijoz'};
+  const avatars = {pm:'📋',mobilograf:'📸',montajor:'🎬',designer:'🎨',
+    copywriter:'✍️',smm:'📱',sales:'💼',accountant:'🧾',client:'🤝'};
+
+  const newId = email.split('@')[0].replace(/[^a-z0-9]/g,'').substring(0,10) + Math.floor(Math.random()*100);
+
+  const { data, error } = await sb.from('users').insert({
+    id: newId,
+    password: pass,
+    email: email,
+    name: name,
+    role: role,
+    role_label: roleLabels[role] || role,
+    avatar: avatars[role] || '👤',
+    phone: phone || '',
+    is_active: false
+  }).select().single();
+
+  btn.textContent = 'Ro'yxatdan o'tish';
+  btn.disabled = false;
+
+  if (error) {
+    alertEl.style.display = 'block';
+    alertEl.textContent = '❌ Xatolik: ' + error.message;
+    return;
+  }
+
+  // Notify admins via Telegram
+  const tgText = `🆕 *Yangi foydalanuvchi ro'yxatdan o'tdi!*\n\n👤 Ism: *${name}*\n📧 Gmail: ${email}\n📞 Telefon: ${phone||'—'}\n💼 Rol: ${roleLabels[role]||role}\n🆔 ID: \`${newId}\`\n\n⚠️ Tasdiqlash uchun admin panelga kiring: https://qadamagancy.vercel.app`;
+  sendToAdmins(tgText);
+
+  await dbLogActivity(newId, name, 'Ro'yxatdan o'tdi — tasdiq kutilmoqda');
+
+  alertEl.style.display = 'block';
+  alertEl.style.cssText = 'display:block;background:rgba(46,213,115,0.1);border:1px solid rgba(46,213,115,0.3);color:#2ed573;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px';
+  alertEl.textContent = '✅ So'rov yuborildi! Admin tasdiqlashini kuting.';
+  document.getElementById('regName').value = '';
+  document.getElementById('regEmail').value = '';
+  document.getElementById('regPass').value = '';
+  document.getElementById('regPhone').value = '';
+}
+
 
 function openDashboard() {
   document.getElementById('mainSite').style.display = 'none';
@@ -1247,9 +1352,24 @@ function getPanels(role, data={}) {
   </div>`;
 
   // EMPLOYEES (admin/pm) — REAL DB
+  const pendingUsers = employees.filter(u => u.is_active === false);
+  const activeUsers = employees.filter(u => u.is_active !== false);
+  
+  const pendingRows = pendingUsers.map(u => `
+    <tr style="background:rgba(245,158,11,0.05)">
+      <td>${u.id}</td>
+      <td>${u.avatar||'👤'} ${u.name}<br><small style="color:var(--text2)">${u.email||''}</small></td>
+      <td><span class="role-tag ${roleTagMap[u.role]||''}">${u.role_label||u.role}</span></td>
+      <td>${u.phone||'—'}</td>
+      <td><span class="badge badge-yellow">⏳ Tasdiq kutilmoqda</span></td>
+      <td>
+        <button class="action-btn success" onclick="window.approveUser('${u.id}','${u.name}','${u.email||''}')">✅ Tasdiqlash</button>
+        <button class="action-btn danger" onclick="window.rejectUser('${u.id}','${u.name}','${u.email||''}')">❌ Rad</button>
+      </td>
+    </tr>`).join('');
   const roleTagMap = {admin:'role-admin',pm:'role-pm',mobilograf:'role-mobilograf',montajor:'role-montajor',
     designer:'role-designer',copywriter:'role-copywriter',smm:'role-smm',sales:'role-sales',accountant:'role-accountant',client:'role-client'};
-  const empRows = employees.filter(u=>u.role!=='client').map(u => `
+  const empRows = activeUsers.map(u => `
     <tr>
       <td>${u.id}</td>
       <td>${u.avatar||'👤'} ${u.name}</td>
@@ -1265,6 +1385,13 @@ function getPanels(role, data={}) {
   <div class="page-header"><div class="page-title">Xodimlar boshqaruvi</div><div class="page-sub">Jami: ${employees.filter(u=>u.role!=='client').length} xodim</div></div>
   <div class="table-wrap">
     <div class="table-head"><h3>Xodimlar ro'yxati</h3><button class="action-btn" onclick="window.showAddEmployeeForm()">+ Qo'shish</button></div>
+    ${pendingRows ? `
+    <div style="padding:12px 16px;background:rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.2)">
+      <b style="color:#f59e0b">⏳ Tasdiq kutayotganlar (${pendingUsers.length})</b>
+    </div>
+    <table><thead><tr><th>ID</th><th>Ism / Gmail</th><th>Rol</th><th>Telefon</th><th>Holat</th><th>Amallar</th></tr></thead>
+    <tbody>${pendingRows}</tbody></table>
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border)"><b>✅ Faol xodimlar (${activeUsers.length})</b></div>` : ''}
     <div id="addEmpForm" style="display:none;padding:16px;border-bottom:1px solid var(--border)">
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:end">
         <div><label style="font-size:12px;color:var(--text2)">ID</label><input id="ne_id" type="text" placeholder="yangi_id" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-size:13px"></div>
@@ -1667,6 +1794,29 @@ window.deleteProject = async function(id) {
   } catch(e) { alert('Xatolik: ' + e); }
 };
 
+
+window.approveUser = async function(id, name, email) {
+  if (!confirm(`${name} ni tasdiqlaysizmi?`)) return;
+  const { error } = await sb.from('users').update({ is_active: true }).eq('id', id);
+  if (error) { alert('Xatolik: ' + error.message); return; }
+  await dbLogActivity(currentUser.id, currentUser.name, `Foydalanuvchi tasdiqlandi: ${name}`);
+  
+  // Notify via Telegram
+  const tg = `✅ *Hisobingiz tasdiqlandi!*\n\n👤 ${name}\n📧 ${email}\n\n🌐 Saytga kiring: https://qadamagancy.vercel.app\n\nGmail va parolingiz bilan kiring.`;
+  sendToAdmins(`👑 Admin tasdiqladi: *${name}* (${email})`);
+  
+  alert(`✅ ${name} tasdiqlandi!`);
+  window.buildMainContent(currentUser.role);
+};
+
+window.rejectUser = async function(id, name, email) {
+  if (!confirm(`${name} ni rad etasizmi? Bu foydalanuvchi o'chiriladi.`)) return;
+  await sb.from('users').delete().eq('id', id);
+  await dbLogActivity(currentUser.id, currentUser.name, `Foydalanuvchi rad etildi: ${name}`);
+  sendToAdmins(`❌ Admin rad etdi: *${name}* (${email})`);
+  alert(`❌ ${name} rad etildi va o'chirildi.`);
+  window.buildMainContent(currentUser.role);
+};
 
 // ========== DB ACTION HELPERS ==========
 window.showAddEmployeeForm = function() {
